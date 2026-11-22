@@ -1,0 +1,17 @@
+{
+  "name": "KCAM - Kindergarten Cloud Academic Management",
+  "short_name": "কেসিএএম",
+  "description": "আপনার পুরো স্কুল, আপনার ফোনে।",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#16a34a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
