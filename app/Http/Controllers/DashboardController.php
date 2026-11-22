@@ -53,7 +53,7 @@ class DashboardController extends Controller
         $totalDue = (int) $monthlyInvoices->sum('due');
 
         // 4. Recent Payments
-        $recentPayments = Payment::with(['invoice.student', 'collector'])
+        $recentPayments = Payment::with(['invoice.student.currentEnrollment', 'collector'])
             ->latest('paid_at')
             ->limit(5)
             ->get();

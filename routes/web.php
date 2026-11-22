@@ -41,31 +41,31 @@ Route::middleware('auth')->group(function (): void {
     // Every route below needs a permission: being logged in is never enough.
 
     // Students
-    Route::prefix('students')->name('students.')->group(function (): void {
+    Route::prefix('students')->name('students.')->middleware('module:students')->group(function (): void {
         Route::get('/', [StudentController::class, 'index'])->middleware('can:view-students')->name('index');
         Route::get('/create', [StudentController::class, 'create'])->middleware('can:create-students')->name('create');
         Route::post('/', [StudentController::class, 'store'])->middleware('can:create-students')->name('store');
     });
 
     // Attendance
-    Route::prefix('attendance')->name('attendance.')->group(function (): void {
+    Route::prefix('attendance')->name('attendance.')->middleware('module:attendance')->group(function (): void {
         Route::get('/', [AttendanceController::class, 'index'])->middleware('can:take-attendance')->name('index');
         Route::post('/', [AttendanceController::class, 'store'])->middleware('can:take-attendance')->name('store');
     });
 
     // Fees & Collection (staff only; parents get their own portal routes later)
-    Route::prefix('fees')->name('fees.')->group(function (): void {
+    Route::prefix('fees')->name('fees.')->middleware('module:fees')->group(function (): void {
         Route::get('/', [FeeController::class, 'index'])->middleware('can:collect-fees')->name('index');
         Route::post('/{invoice}/collect', [FeeController::class, 'collect'])->middleware('can:collect-fees')->name('collect');
     });
 
     // Exams & Results
-    Route::prefix('exams')->name('exams.')->group(function (): void {
+    Route::prefix('exams')->name('exams.')->middleware('module:exams')->group(function (): void {
         Route::get('/', [ExamController::class, 'index'])->middleware('can:view-exams')->name('index');
     });
 
     // Notices & SMS
-    Route::prefix('notices')->name('notices.')->group(function (): void {
+    Route::prefix('notices')->name('notices.')->middleware('module:notices')->group(function (): void {
         Route::get('/', [NoticeController::class, 'index'])->middleware('can:view-notices')->name('index');
         Route::post('/', [NoticeController::class, 'store'])->middleware('can:send-notices')->name('store');
     });

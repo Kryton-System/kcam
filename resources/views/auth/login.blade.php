@@ -88,10 +88,12 @@
         </div>
     @endif
 
+    @if (config('kcam.mode') === 'multi')
     <div class="mt-6 text-center text-sm border-t border-slate-100 pt-4">
         <span class="text-slate-500 text-xs">আপনার স্কুল কি এখনও যুক্ত হয়নি?</span>
         <a href="{{ route('register') }}" class="font-semibold text-emerald-700 hover:text-emerald-800 ml-1 text-xs">
             নতুন স্কুল নিবন্ধন করুন
         </a>
     </div>
+    @endif
 </x-guest-layout>

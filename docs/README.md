@@ -17,6 +17,10 @@
 3. `php artisan migrate` then `php artisan db:seed` (the demo seeder is not yet safe to re-run).
 4. Run tests: `php artisan test --compact`. Format: `vendor/bin/pint --format agent`.
 
+## Deployment model
+
+One install per school (`KCAM_MODE=single`). Set up with `php artisan kcam:install`; modules toggled in `config/kcam.php`. `KCAM_MODE=multi` keeps the hosted multi-school behavior (tests run in this mode).
+
 ## Conventions
 
 - Tenancy: `school_id` global scope fails closed; use `CurrentSchool::runAs` outside HTTP.

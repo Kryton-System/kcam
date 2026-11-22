@@ -16,6 +16,14 @@ use Illuminate\View\View;
 
 class RegisteredSchoolController extends Controller
 {
+    /**
+     * A packaged single school install is set up with kcam:install, never from the web.
+     */
+    private function ensureOpen(): void
+    {
+        abort_if(config('kcam.mode') === 'single', 404);
+    }
+
     private function clean(mixed $value): mixed
     {
         return is_string($value) ? NormalizesInputHelper::cleanText($value) : $value;
@@ -26,6 +34,8 @@ class RegisteredSchoolController extends Controller
      */
     public function create(): View
     {
+        $this->ensureOpen();
+
         return view('auth.register');
     }
 
@@ -34,6 +44,8 @@ class RegisteredSchoolController extends Controller
      */
     public function store(Request $request, SetupSchoolAction $setupAction): RedirectResponse
     {
+        $this->ensureOpen();
+
         $request->merge([
             'name' => $this->clean($request->input('name')),
             'name_bn' => $this->clean($request->input('name_bn')),

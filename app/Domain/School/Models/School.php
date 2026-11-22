@@ -6,6 +6,7 @@ namespace App\Domain\School\Models;
 
 use App\Domain\Student\Models\Student;
 use App\Models\User;
+use App\Support\Tenancy\CurrentSchool;
 use Database\Factories\SchoolFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,14 @@ class School extends Model
         return [
             'settings' => 'array',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        $flush = static fn () => CurrentSchool::flush();
+
+        static::saved($flush);
+        static::deleted($flush);
     }
 
     protected static function newFactory(): SchoolFactory

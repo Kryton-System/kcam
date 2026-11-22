@@ -22,9 +22,13 @@ Full scope: [docs/idea.md](docs/idea.md). Architecture, schema and sprint plan: 
 
 Laravel 13, PHP 8.4, MySQL 8, Livewire 3, Alpine.js, Tailwind CSS 4, Vite, Pest 4, spatie/laravel-permission, spatie/laravel-activitylog, Laravel Pint, Larastan.
 
+## Deployment model
+
+KCAM is sold as a package: **one install per school**, configured for that school (`KCAM_MODE=single`, the default). The school is resolved automatically and public registration is closed. Create it once with `php artisan kcam:install`. Switch modules on or off per customer in `config/kcam.php` (env `KCAM_MODULE_EXAMS=false`, and so on). A shared hosted install is still possible with `KCAM_MODE=multi`.
+
 ## Design principles
 
-- **Multi-tenant by school.** Every tenant table carries `school_id`, enforced by a global scope that fails closed. Outside HTTP (jobs, seeders) work runs inside `CurrentSchool::runAs()`.
+- **Tenant isolation by school.** Every tenant table carries `school_id`, enforced by a global scope that fails closed. Outside HTTP (jobs, seeders) work runs inside `CurrentSchool::runAs()`.
 - **Money is integer poisha.** Never floats. Use `App\Support\Money`; percent discounts are basis points.
 - **Trustworthy receipts.** Gapless serials from a locked sequence, and idempotent collection via a client UUID.
 - **Secure by default.** Per-route `can:` authorization, Form Request validation with input normalization (Bangla digits, canonical mobile numbers), escaped output, security headers, rate-limited auth.
@@ -53,8 +57,11 @@ docker run -d --name kcam-mysql -p 127.0.0.1:3317:3306 \
 Create the test database `kcam_test` and grant the `kcam` user access to it, set `DB_PORT`, `DB_USERNAME` and `DB_PASSWORD` in `.env`, then:
 
 ```bash
-php artisan migrate --seed
+php artisan migrate
+php artisan kcam:install      # creates the school and owner (single mode)
 composer run dev
+
+# local demo data instead: php artisan db:seed
 ```
 
 The demo seeder only runs in `local` and `testing` and creates a demo school with sample accounts (shortcut buttons appear on the local login page). It is not yet safe to run twice.

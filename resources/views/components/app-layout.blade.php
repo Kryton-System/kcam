@@ -61,6 +61,7 @@
                 </x-nav-link>
 
                 @if ($role === 'owner' || $role === 'teacher')
+                    @if (config('kcam.modules.attendance'))
                     <x-nav-link :href="route('attendance.index')" :active="request()->routeIs('attendance.*')">
                         <x-slot:icon>
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,7 +70,9 @@
                         </x-slot:icon>
                         হাজিরা
                     </x-nav-link>
+                    @endif
 
+                    @if (config('kcam.modules.students'))
                     <x-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                         <x-slot:icon>
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -78,9 +81,11 @@
                         </x-slot:icon>
                         শিক্ষার্থী তালিকা
                     </x-nav-link>
+                    @endif
                 @endif
 
                 @if ($role === 'owner' || $role === 'accountant')
+                    @if (config('kcam.modules.fees'))
                     <x-nav-link :href="route('fees.index')" :active="request()->routeIs('fees.*')">
                         <x-slot:icon>
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,9 +94,11 @@
                         </x-slot:icon>
                         ফি ও আদায়
                     </x-nav-link>
+                    @endif
                 @endif
 
                 @if ($role === 'owner' || $role === 'teacher')
+                    @if (config('kcam.modules.exams'))
                     <x-nav-link :href="route('exams.index')" :active="request()->routeIs('exams.*')">
                         <x-slot:icon>
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -100,8 +107,10 @@
                         </x-slot:icon>
                         পরীক্ষা ও ফলাফল
                     </x-nav-link>
+                    @endif
                 @endif
 
+                @if (config('kcam.modules.notices'))
                 <x-nav-link :href="route('notices.index')" :active="request()->routeIs('notices.*')">
                     <x-slot:icon>
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,6 +119,7 @@
                     </x-slot:icon>
                     বিজ্ঞপ্তি ও এসএমএস
                 </x-nav-link>
+                @endif
             </nav>
 
             <!-- User Footer -->
@@ -185,36 +195,44 @@
         </a>
 
         @if ($role === 'owner' || $role === 'teacher')
+            @if (config('kcam.modules.attendance'))
             <a href="{{ route('attendance.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('attendance.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
                 <span class="text-[11px] mt-1">হাজিরা</span>
             </a>
+            @endif
 
+            @if (config('kcam.modules.students'))
             <a href="{{ route('students.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('students.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
                 <span class="text-[11px] mt-1">শিক্ষার্থী</span>
             </a>
+            @endif
         @endif
 
         @if ($role === 'owner' || $role === 'accountant')
+            @if (config('kcam.modules.fees'))
             <a href="{{ route('fees.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('fees.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span class="text-[11px] mt-1">ফি</span>
             </a>
+            @endif
         @endif
 
+        @if (config('kcam.modules.notices'))
         <a href="{{ route('notices.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('notices.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
             <span class="text-[11px] mt-1">বিজ্ঞপ্তি</span>
         </a>
+        @endif
     </nav>
 
     <!-- Global Toast Component -->

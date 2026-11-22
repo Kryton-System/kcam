@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support\Tenancy;
 
+use App\Domain\School\Models\School;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,6 +21,8 @@ final class CurrentSchool
 
     private static bool $platform = false;
 
+    private static ?int $soleSchoolId = null;
+
     public static function id(): ?int
     {
         if (self::$schoolId !== null) {
@@ -28,7 +31,38 @@ final class CurrentSchool
 
         $schoolId = Auth::user()?->school_id;
 
-        return $schoolId === null ? null : (int) $schoolId;
+        if ($schoolId !== null) {
+            return (int) $schoolId;
+        }
+
+        return config('kcam.mode') === 'single' ? self::soleSchoolId() : null;
+    }
+
+    /**
+     * Forget the cached single school (after installing or deleting a school).
+     */
+    public static function flush(): void
+    {
+        self::$soleSchoolId = null;
+    }
+
+    /**
+     * The one school of a single school install. Null when there is none yet or, to fail
+     * closed, when more than one exists.
+     */
+    private static function soleSchoolId(): ?int
+    {
+        if (self::$soleSchoolId !== null) {
+            return self::$soleSchoolId;
+        }
+
+        $ids = School::query()->limit(2)->pluck('id');
+
+        if ($ids->count() !== 1) {
+            return null;
+        }
+
+        return self::$soleSchoolId = (int) $ids->first();
     }
 
     public static function isPlatform(): bool
