@@ -1,58 +1,93 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# KCAM
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Kindergarten Cloud Academic Management**: Bangla-first school management for small Bangladeshi kindergartens and primary schools (50 to 200 students). Your whole school in your phone.
 
-## About Laravel
+Most small schools still run on paper: handwritten registers, cash receipt books, notebook dues. KCAM gives the owner, teachers, accountants and parents one place for students, attendance, fees, exams and notices.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Module | Status |
+|---|---|
+| Authentication, school registration, roles and permissions | Done |
+| Student admission and records | Done |
+| Attendance | Done |
+| Fees: monthly invoices, discounts, collection, numbered receipts | Done |
+| Exams (listing) | Basic |
+| Notices with SMS | Basic |
+| Parent portal, payroll, transport, inventory, accounts | Planned |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Full scope: [docs/idea.md](docs/idea.md). Architecture, schema and sprint plan: [docs/dev-plan.md](docs/dev-plan.md).
 
-## Learning Laravel
+## Tech stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Laravel 13, PHP 8.4, MySQL 8, Livewire 3, Alpine.js, Tailwind CSS 4, Vite, Pest 4, spatie/laravel-permission, spatie/laravel-activitylog, Laravel Pint, Larastan.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Design principles
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- **Multi-tenant by school.** Every tenant table carries `school_id`, enforced by a global scope that fails closed. Outside HTTP (jobs, seeders) work runs inside `CurrentSchool::runAs()`.
+- **Money is integer poisha.** Never floats. Use `App\Support\Money`; percent discounts are basis points.
+- **Trustworthy receipts.** Gapless serials from a locked sequence, and idempotent collection via a client UUID.
+- **Secure by default.** Per-route `can:` authorization, Form Request validation with input normalization (Bangla digits, canonical mobile numbers), escaped output, security headers, rate-limited auth.
 
-## Agentic Development
+## Getting started
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Requirements: PHP 8.4, Composer, Node 20+, Docker (for MySQL).
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone git@github.com:Kryton-System/kcam.git
+cd kcam
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Start MySQL 8 (any MySQL 8 server works; adjust `.env` to match):
+
+```bash
+docker run -d --name kcam-mysql -p 127.0.0.1:3317:3306 \
+  -e MYSQL_ROOT_PASSWORD=change-me -e MYSQL_USER=kcam -e MYSQL_PASSWORD=change-me \
+  -e MYSQL_DATABASE=kcam -v kcam-mysql-data:/var/lib/mysql mysql:8.0
+```
+
+Create the test database `kcam_test` and grant the `kcam` user access to it, set `DB_PORT`, `DB_USERNAME` and `DB_PASSWORD` in `.env`, then:
+
+```bash
+php artisan migrate --seed
+composer run dev
+```
+
+The demo seeder only runs in `local` and `testing` and creates a demo school with sample accounts (shortcut buttons appear on the local login page). It is not yet safe to run twice.
+
+## Testing and quality
+
+```bash
+php artisan test --compact        # Pest suite, runs against the kcam_test MySQL database
+vendor/bin/pint --format agent    # code style
+```
+
+`phpunit.xml` forces `DB_DATABASE=kcam_test`, so tests never touch your dev data. The project targets 80%+ coverage and test-first development.
+
+## Project layout
+
+```
+app/Domain/        Business logic by module (School, Student, Fees, Attendance ...)
+app/Http/          Controllers, Form Requests, middleware
+app/Support/       Tenancy context, Money, enums, input helpers
+database/          Migrations, factories, seeders
+resources/views/   Blade views and components
+tests/Feature/     Authorization, tenancy, validation, money integrity tests
+docs/              Idea, development plan, QA plan, decisions
+```
+
+## Roadmap
+
+Open items are tracked in section 13 of [docs/dev-plan.md](docs/dev-plan.md): CI workflow, owner email or mobile verification, CSP nonce, Larastan config, guardian pivot, payment allocations, attendance sessions and a parallel row-lock test.
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Private project of Kryton System. Use Conventional Commits (`feat`, `fix`, `docs` ...), write a failing test first, and run Pint and the test suite before opening a pull request.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proprietary. All rights reserved.
