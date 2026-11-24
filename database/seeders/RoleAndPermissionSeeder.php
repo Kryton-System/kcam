@@ -64,6 +64,9 @@ class RoleAndPermissionSeeder extends Seeder
 
             // Parent portal (Parent role only)
             'view-portal',
+            // Accounts
+            'view-accounts',
+            'manage-expenses',
 
             // Audit & System
             'view-audit-logs',
@@ -110,6 +113,8 @@ class RoleAndPermissionSeeder extends Seeder
             'send-sms',
             'view-sms-logs',
             'view-audit-logs',
+            'view-accounts',
+            'manage-expenses',
         ]);
 
         // 3. Teacher
@@ -133,6 +138,8 @@ class RoleAndPermissionSeeder extends Seeder
             'collect-fees',
             'view-financial-reports',
             'view-notices',
+            'view-accounts',
+            'manage-expenses',
         ]);
 
         // 5. Parent (read-only for their children)
