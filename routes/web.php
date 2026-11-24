@@ -45,6 +45,9 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/', [StudentController::class, 'index'])->middleware('can:view-students')->name('index');
         Route::get('/create', [StudentController::class, 'create'])->middleware('can:create-students')->name('create');
         Route::post('/', [StudentController::class, 'store'])->middleware('can:create-students')->name('store');
+        Route::get('/{student}', [StudentController::class, 'show'])->middleware('can:view-students')->name('show');
+        Route::get('/{student}/edit', [StudentController::class, 'edit'])->middleware('can:edit-students')->name('edit');
+        Route::put('/{student}', [StudentController::class, 'update'])->middleware('can:edit-students')->name('update');
     });
 
     // Attendance
@@ -62,6 +65,8 @@ Route::middleware('auth')->group(function (): void {
     // Exams & Results
     Route::prefix('exams')->name('exams.')->middleware('module:exams')->group(function (): void {
         Route::get('/', [ExamController::class, 'index'])->middleware('can:view-exams')->name('index');
+        Route::get('/{exam}/marks', [ExamController::class, 'editMarks'])->middleware('can:enter-marks')->name('marks.edit');
+        Route::put('/{exam}/marks', [ExamController::class, 'updateMarks'])->middleware('can:enter-marks')->name('marks.update');
     });
 
     // Notices & SMS

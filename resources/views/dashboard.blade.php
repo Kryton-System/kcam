@@ -9,7 +9,7 @@
                 স্বাগতম, {{ auth()->user()->name }}
             </h1>
             <p class="text-xs md:text-sm text-slate-500 mt-1">
-                {{ $school?->name_bn ?? $school?->name }} | শিক্ষাবর্ষ: {{ $academicYear?->name ?? '২০২৬' }}
+                {{ $school?->name_bn ?? $school?->name }} | শিক্ষাবর্ষ: {{ \App\Support\Helpers\BanglaHelper::toBanglaDigits($academicYear?->name ?? '২০২৬') }}
             </p>
         </div>
 
@@ -148,13 +148,13 @@
                                 <td class="px-4 py-3 text-slate-600">
                                     {{ \App\Support\Helpers\BanglaHelper::toBanglaDigits($payment->invoice?->student?->currentEnrollment?->roll_no ?? '1') }}
                                 </td>
-                                <td class="px-4 py-3 font-bold text-emerald-700">
+                                <td class="whitespace-nowrap px-4 py-3 font-bold text-emerald-700">
                                     {{ \App\Support\Helpers\BanglaHelper::formatTaka($payment->amount, true) }}
                                 </td>
                                 <td class="px-4 py-3 text-slate-600">
                                     <x-badge variant="neutral">{{ $payment->method?->labelBn() ?? 'নগদ' }}</x-badge>
                                 </td>
-                                <td class="px-4 py-3 text-xs text-slate-500">
+                                <td class="whitespace-nowrap px-4 py-3 text-xs text-slate-500">
                                     {{ $payment->paid_at ? \App\Support\Helpers\BanglaHelper::formatDate($payment->paid_at) : 'আজ' }}
                                 </td>
                             </tr>

@@ -79,7 +79,7 @@
                             {{ $student->student_code }}
                         </td>
                         <td class="px-4 py-3 font-semibold text-slate-900">
-                            <div>{{ $student->name_bn ?? $student->name }}</div>
+                            <div><a href="{{ route('students.show', $student) }}" class="hover:text-emerald-700 hover:underline">{{ $student->name_bn ?? $student->name }}</a></div>
                             @if ($student->name_bn && $student->name !== $student->name_bn)
                                 <div class="text-[11px] text-slate-400 font-normal">{{ $student->name }}</div>
                             @endif

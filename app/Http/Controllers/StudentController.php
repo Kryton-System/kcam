@@ -9,9 +9,12 @@ use App\Domain\Student\Actions\AdmitStudentAction;
 use App\Domain\Student\Models\Student;
 use App\Http\Requests\IndexStudentsRequest;
 use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 use App\Support\Helpers\Search;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class StudentController extends Controller
@@ -67,5 +70,40 @@ class StudentController extends Controller
         ]);
 
         return redirect()->route('students.index')->with('success', 'শিক্ষার্থী সফলভাবে ভর্তি করা হয়েছে।');
+    }
+
+    public function show(Student $student): View
+    {
+        $student->load(['primaryGuardian', 'currentEnrollment.schoolClass', 'currentEnrollment.section']);
+
+        return view('students.show', ['student' => $student]);
+    }
+
+    public function edit(Student $student): View
+    {
+        $student->load('primaryGuardian');
+
+        return view('students.edit', ['student' => $student]);
+    }
+
+    public function update(UpdateStudentRequest $request, Student $student): RedirectResponse
+    {
+        $data = $request->validated();
+
+        DB::transaction(function () use ($student, $data): void {
+            $student->update(Arr::only($data, ['name', 'name_bn', 'dob', 'gender', 'blood_group']));
+
+            $student->guardians()->updateOrCreate(
+                ['is_primary' => true],
+                [
+                    'school_id' => $student->school_id,
+                    'name' => $data['guardian_name'],
+                    'relation' => $data['guardian_relation'],
+                    'mobile' => $data['guardian_mobile'],
+                ],
+            );
+        });
+
+        return redirect()->route('students.show', $student)->with('success', 'তথ্য হালনাগাদ হয়েছে। / Student updated.');
     }
 }
