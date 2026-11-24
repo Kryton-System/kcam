@@ -118,6 +118,7 @@
                     @endif
                 @endif
 
+<<<<<<< HEAD
                 @if (($role === 'owner' || $role === 'accountant') && config('kcam.modules.accounts'))
                 <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
                     <x-slot:icon>
@@ -127,6 +128,19 @@
                     </x-slot:icon>
                     হিসাব
                 </x-nav-link>
+=======
+                @if ($role === 'owner' || $role === 'accountant')
+                    @if (config('kcam.modules.inventory'))
+                    <x-nav-link :href="route('inventory.index')" :active="request()->routeIs('inventory.*')">
+                        <x-slot:icon>
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </x-slot:icon>
+                        ইনভেন্টরি / Inventory
+                    </x-nav-link>
+                    @endif
+>>>>>>> worktree-agent-a0943159e82c7c632
                 @endif
 
                 @if (config('kcam.modules.notices'))
@@ -253,6 +267,7 @@
             @endif
         @endif
 
+<<<<<<< HEAD
         @if (($role === 'owner' || $role === 'accountant') && config('kcam.modules.accounts'))
         <a href="{{ route('accounts.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('accounts.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -260,6 +275,17 @@
             </svg>
             <span class="text-[11px] mt-1">হিসাব</span>
         </a>
+=======
+        @if ($role === 'owner' || $role === 'accountant')
+            @if (config('kcam.modules.inventory'))
+            <a href="{{ route('inventory.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('inventory.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                <span class="text-[11px] mt-1">স্টক</span>
+            </a>
+            @endif
+>>>>>>> worktree-agent-a0943159e82c7c632
         @endif
 
         @if (config('kcam.modules.notices'))

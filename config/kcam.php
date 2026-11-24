@@ -37,6 +37,7 @@ return [
         'notices' => (bool) env('KCAM_MODULE_NOTICES', true),
         'portal' => (bool) env('KCAM_MODULE_PORTAL', true),
         'accounts' => (bool) env('KCAM_MODULE_ACCOUNTS', true),
+        'inventory' => (bool) env('KCAM_MODULE_INVENTORY', true),
     ],
 
 ];

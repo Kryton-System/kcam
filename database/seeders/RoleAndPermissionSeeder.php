@@ -67,6 +67,8 @@ class RoleAndPermissionSeeder extends Seeder
             // Accounts
             'view-accounts',
             'manage-expenses',
+            // Inventory
+            'manage-inventory',
 
             // Audit & System
             'view-audit-logs',
@@ -115,6 +117,7 @@ class RoleAndPermissionSeeder extends Seeder
             'view-audit-logs',
             'view-accounts',
             'manage-expenses',
+            'manage-inventory',
         ]);
 
         // 3. Teacher
@@ -140,6 +143,7 @@ class RoleAndPermissionSeeder extends Seeder
             'view-notices',
             'view-accounts',
             'manage-expenses',
+            'manage-inventory',
         ]);
 
         // 5. Parent (read-only for their children)

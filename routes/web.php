@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HealthCheckController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\StudentController;
@@ -91,5 +92,13 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/expenses/{expense}/void', [AccountsController::class, 'voidExpense'])->middleware('can:manage-expenses')->name('expenses.void');
         Route::post('/categories', [AccountsController::class, 'storeCategory'])->middleware('can:manage-expenses')->name('categories.store');
         Route::get('/cash-book', [AccountsController::class, 'cashBook'])->middleware('can:view-accounts')->name('cash-book');
+    });
+
+    // Inventory (owner and accountant)
+    Route::prefix('inventory')->name('inventory.')->middleware('module:inventory')->group(function (): void {
+        Route::get('/', [InventoryController::class, 'index'])->middleware('can:manage-inventory')->name('index');
+        Route::post('/', [InventoryController::class, 'store'])->middleware('can:manage-inventory')->name('store');
+        Route::get('/{item}', [InventoryController::class, 'show'])->middleware('can:manage-inventory')->name('show');
+        Route::post('/{item}/movements', [InventoryController::class, 'storeMovement'])->middleware('can:manage-inventory')->name('movements.store');
     });
 });
