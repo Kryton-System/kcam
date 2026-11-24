@@ -70,6 +70,9 @@ class RoleAndPermissionSeeder extends Seeder
             'manage-expenses',
             // Inventory
             'manage-inventory',
+            // Transport
+            'view-transport',
+            'manage-transport',
 
             // Audit & System
             'view-audit-logs',
@@ -120,6 +123,8 @@ class RoleAndPermissionSeeder extends Seeder
             'view-accounts',
             'manage-expenses',
             'manage-inventory',
+            'view-transport',
+            'manage-transport',
         ]);
 
         // 3. Teacher
@@ -132,6 +137,7 @@ class RoleAndPermissionSeeder extends Seeder
             'enter-marks',
             'view-notices',
             'send-notices',
+            'view-transport',
         ]);
 
         // 4. Accountant

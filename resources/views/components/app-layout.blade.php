@@ -173,6 +173,17 @@
                     বিজ্ঞপ্তি ও এসএমএস
                 </x-nav-link>
                 @endif
+
+                @if (($role === 'owner' || $role === 'teacher') && config('kcam.modules.transport'))
+                <x-nav-link :href="route('transport.index')" :active="request()->routeIs('transport.*')">
+                    <x-slot:icon>
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0zM3 13V6a1 1 0 011-1h11a1 1 0 011 1v7M16 8h3l2 3v4h-2M3 13h13" />
+                        </svg>
+                    </x-slot:icon>
+                    পরিবহন / Transport
+                </x-nav-link>
+                @endif
             </nav>
 
             <!-- User Footer -->
@@ -324,6 +335,15 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
             <span class="text-[11px] mt-1">বিজ্ঞপ্তি</span>
+        </a>
+        @endif
+
+        @if (($role === 'owner' || $role === 'teacher') && config('kcam.modules.transport'))
+        <a href="{{ route('transport.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('transport.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0zM3 13V6a1 1 0 011-1h11a1 1 0 011 1v7M16 8h3l2 3v4h-2M3 13h13" />
+            </svg>
+            <span class="text-[11px] mt-1">পরিবহন</span>
         </a>
         @endif
     </nav>

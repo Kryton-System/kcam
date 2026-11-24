@@ -39,6 +39,7 @@ return [
         'accounts' => (bool) env('KCAM_MODULE_ACCOUNTS', true),
         'inventory' => (bool) env('KCAM_MODULE_INVENTORY', true),
         'payroll' => (bool) env('KCAM_MODULE_PAYROLL', true),
+        'transport' => (bool) env('KCAM_MODULE_TRANSPORT', true),
     ],
 
 ];
