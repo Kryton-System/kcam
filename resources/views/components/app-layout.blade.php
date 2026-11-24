@@ -110,6 +110,17 @@
                     @endif
                 @endif
 
+                @if (($role === 'owner' || $role === 'accountant') && config('kcam.modules.accounts'))
+                <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
+                    <x-slot:icon>
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </x-slot:icon>
+                    হিসাব
+                </x-nav-link>
+                @endif
+
                 @if (config('kcam.modules.notices'))
                 <x-nav-link :href="route('notices.index')" :active="request()->routeIs('notices.*')">
                     <x-slot:icon>
@@ -223,6 +234,15 @@
                 <span class="text-[11px] mt-1">ফি</span>
             </a>
             @endif
+        @endif
+
+        @if (($role === 'owner' || $role === 'accountant') && config('kcam.modules.accounts'))
+        <a href="{{ route('accounts.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('accounts.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            <span class="text-[11px] mt-1">হিসাব</span>
+        </a>
         @endif
 
         @if (config('kcam.modules.notices'))

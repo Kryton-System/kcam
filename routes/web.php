@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredSchoolController;
@@ -73,5 +74,15 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('notices')->name('notices.')->middleware('module:notices')->group(function (): void {
         Route::get('/', [NoticeController::class, 'index'])->middleware('can:view-notices')->name('index');
         Route::post('/', [NoticeController::class, 'store'])->middleware('can:send-notices')->name('store');
+    });
+
+    // Accounts: expenses, monthly summary, daily cash book
+    Route::prefix('accounts')->name('accounts.')->middleware('module:accounts')->group(function (): void {
+        Route::get('/', [AccountsController::class, 'index'])->middleware('can:view-accounts')->name('index');
+        Route::get('/expenses', [AccountsController::class, 'expenses'])->middleware('can:view-accounts')->name('expenses');
+        Route::post('/expenses', [AccountsController::class, 'storeExpense'])->middleware('can:manage-expenses')->name('expenses.store');
+        Route::post('/expenses/{expense}/void', [AccountsController::class, 'voidExpense'])->middleware('can:manage-expenses')->name('expenses.void');
+        Route::post('/categories', [AccountsController::class, 'storeCategory'])->middleware('can:manage-expenses')->name('categories.store');
+        Route::get('/cash-book', [AccountsController::class, 'cashBook'])->middleware('can:view-accounts')->name('cash-book');
     });
 });

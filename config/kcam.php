@@ -35,6 +35,7 @@ return [
         'fees' => (bool) env('KCAM_MODULE_FEES', true),
         'exams' => (bool) env('KCAM_MODULE_EXAMS', true),
         'notices' => (bool) env('KCAM_MODULE_NOTICES', true),
+        'accounts' => (bool) env('KCAM_MODULE_ACCOUNTS', true),
     ],
 
 ];
