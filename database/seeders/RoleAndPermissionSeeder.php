@@ -62,6 +62,9 @@ class RoleAndPermissionSeeder extends Seeder
             'send-sms',
             'view-sms-logs',
 
+            // Inventory
+            'manage-inventory',
+
             // Audit & System
             'view-audit-logs',
             'manage-subscriptions',
@@ -107,6 +110,7 @@ class RoleAndPermissionSeeder extends Seeder
             'send-sms',
             'view-sms-logs',
             'view-audit-logs',
+            'manage-inventory',
         ]);
 
         // 3. Teacher
@@ -130,6 +134,7 @@ class RoleAndPermissionSeeder extends Seeder
             'collect-fees',
             'view-financial-reports',
             'view-notices',
+            'manage-inventory',
         ]);
 
         // 5. Parent (read-only for their children)

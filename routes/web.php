@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HealthCheckController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
@@ -73,5 +74,13 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('notices')->name('notices.')->middleware('module:notices')->group(function (): void {
         Route::get('/', [NoticeController::class, 'index'])->middleware('can:view-notices')->name('index');
         Route::post('/', [NoticeController::class, 'store'])->middleware('can:send-notices')->name('store');
+    });
+
+    // Inventory (owner and accountant)
+    Route::prefix('inventory')->name('inventory.')->middleware('module:inventory')->group(function (): void {
+        Route::get('/', [InventoryController::class, 'index'])->middleware('can:manage-inventory')->name('index');
+        Route::post('/', [InventoryController::class, 'store'])->middleware('can:manage-inventory')->name('store');
+        Route::get('/{item}', [InventoryController::class, 'show'])->middleware('can:manage-inventory')->name('show');
+        Route::post('/{item}/movements', [InventoryController::class, 'storeMovement'])->middleware('can:manage-inventory')->name('movements.store');
     });
 });

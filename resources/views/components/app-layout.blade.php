@@ -110,6 +110,19 @@
                     @endif
                 @endif
 
+                @if ($role === 'owner' || $role === 'accountant')
+                    @if (config('kcam.modules.inventory'))
+                    <x-nav-link :href="route('inventory.index')" :active="request()->routeIs('inventory.*')">
+                        <x-slot:icon>
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </x-slot:icon>
+                        ইনভেন্টরি / Inventory
+                    </x-nav-link>
+                    @endif
+                @endif
+
                 @if (config('kcam.modules.notices'))
                 <x-nav-link :href="route('notices.index')" :active="request()->routeIs('notices.*')">
                     <x-slot:icon>
@@ -221,6 +234,17 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span class="text-[11px] mt-1">ফি</span>
+            </a>
+            @endif
+        @endif
+
+        @if ($role === 'owner' || $role === 'accountant')
+            @if (config('kcam.modules.inventory'))
+            <a href="{{ route('inventory.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('inventory.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                <span class="text-[11px] mt-1">স্টক</span>
             </a>
             @endif
         @endif
