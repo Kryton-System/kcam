@@ -85,7 +85,7 @@ class AccountsController extends Controller
 
     public function cashBook(AccountsPeriodRequest $request): View
     {
-        $date = $request->date();
+        $date = $request->selectedDate();
 
         $receipts = Payment::with(['invoice.student'])
             ->where('status', PaymentStatus::Completed->value)

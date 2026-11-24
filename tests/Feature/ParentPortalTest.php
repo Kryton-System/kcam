@@ -25,13 +25,19 @@ use App\Support\Tenancy\CurrentSchool;
  *
  * @return array{parent: User, student: Student, enrollment: Enrollment, year: AcademicYear, class: SchoolClass}
  */
-function portalFamily(?School $school = null, string $mobile = '01744444444'): array
+function portalFamily(?School $school = null, ?string $mobile = null): array
 {
+    static $sequence = 0;
+    $mobile ??= sprintf('017%08d', ++$sequence);
+
     $parent = schoolUser(UserRole::Parent, $school);
     $parent->forceFill(['mobile' => $mobile])->save();
 
     return CurrentSchool::runAs($parent->school_id, function () use ($parent, $mobile): array {
-        $year = AcademicYear::factory()->create(['school_id' => $parent->school_id, 'is_current' => true]);
+        $year = AcademicYear::query()
+            ->where('school_id', $parent->school_id)
+            ->where('is_current', true)
+            ->first() ?? AcademicYear::factory()->create(['school_id' => $parent->school_id, 'is_current' => true]);
         $class = SchoolClass::factory()->create(['school_id' => $parent->school_id]);
         $student = Student::factory()->create(['school_id' => $parent->school_id]);
         Guardian::factory()->create(['school_id' => $parent->school_id, 'student_id' => $student->id, 'mobile' => $mobile]);

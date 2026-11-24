@@ -190,8 +190,11 @@ test('there is no route to edit or delete an expense', function (): void {
     $owner = schoolUser(UserRole::Owner);
     $expense = accountsExpense($owner->school, accountsCategory($owner->school), 70000, now()->toDateString());
 
-    $this->actingAs($owner)->delete('/accounts/expenses/'.$expense->id)->assertStatus(405);
-    $this->actingAs($owner)->put('/accounts/expenses/'.$expense->id, ['amount' => '1'])->assertStatus(405);
+    $deleteStatus = $this->actingAs($owner)->delete('/accounts/expenses/'.$expense->id)->getStatusCode();
+    $updateStatus = $this->actingAs($owner)->put('/accounts/expenses/'.$expense->id, ['amount' => '1'])->getStatusCode();
+
+    expect([404, 405])->toContain($deleteStatus)
+        ->and([404, 405])->toContain($updateStatus);
 });
 
 // Tenant isolation

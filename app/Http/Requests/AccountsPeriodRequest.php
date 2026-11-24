@@ -43,7 +43,7 @@ class AccountsPeriodRequest extends FormRequest
         return $value ? CarbonImmutable::createFromFormat('Y-m-d', $value.'-01')->startOfDay() : CarbonImmutable::today()->startOfMonth();
     }
 
-    public function date(): CarbonImmutable
+    public function selectedDate(): CarbonImmutable
     {
         $value = $this->validated('date');
 
