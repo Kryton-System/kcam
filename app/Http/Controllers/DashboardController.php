@@ -10,7 +10,9 @@ use App\Domain\Notices\Models\Notice;
 use App\Domain\Payments\Models\Payment;
 use App\Domain\Student\Models\Enrollment;
 use App\Support\Enums\AttendanceStatus;
+use App\Support\Enums\UserRole;
 use App\Support\Helpers\BanglaHelper;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -19,9 +21,14 @@ class DashboardController extends Controller
     /**
      * Display the authenticated user's dashboard.
      */
-    public function __invoke(Request $request): View
+    public function __invoke(Request $request): View|RedirectResponse
     {
         $user = $request->user();
+
+        if ($user->role === UserRole::Parent && config('kcam.modules.portal')) {
+            return redirect()->route('portal.index');
+        }
+
         $school = $user->school;
 
         $academicYear = $school?->currentAcademicYear();
