@@ -1,13 +1,20 @@
 @import 'tailwindcss';
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
+
+@font-face {
+    font-family: 'Kalpurush';
+    src: url('/fonts/kalpurush.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../views/**/*.blade.php';
 
 @theme {
-    --font-sans: 'Noto Sans Bengali', 'SolaimanLipi', 'Kalpurush', 'Instrument Sans', system-ui, -apple-system, sans-serif;
-    --font-bn: 'Noto Sans Bengali', 'SolaimanLipi', 'Kalpurush', sans-serif;
+    --font-sans: 'Kalpurush', 'SolaimanLipi', 'Instrument Sans', system-ui, -apple-system, sans-serif;
+    --font-bn: 'Kalpurush', 'SolaimanLipi', sans-serif;
 
     /* KCAM Primary Palette: Forest & Emerald Green */
     --color-primary-50: #f0fdf4;
