@@ -118,8 +118,6 @@
                     @endif
                 @endif
 
-<<<<<<< HEAD
-<<<<<<< HEAD
                 @if (($role === 'owner' || $role === 'accountant') && config('kcam.modules.accounts'))
                 <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
                     <x-slot:icon>
@@ -129,7 +127,7 @@
                     </x-slot:icon>
                     হিসাব
                 </x-nav-link>
-=======
+                @endif
                 @if ($role === 'owner' || $role === 'accountant')
                     @if (config('kcam.modules.inventory'))
                     <x-nav-link :href="route('inventory.index')" :active="request()->routeIs('inventory.*')">
@@ -141,8 +139,7 @@
                         ইনভেন্টরি / Inventory
                     </x-nav-link>
                     @endif
->>>>>>> worktree-agent-a0943159e82c7c632
-=======
+                @endif
                 @if ($role === 'owner' && config('kcam.modules.payroll'))
                 <x-nav-link :href="route('staff.index')" :active="request()->routeIs('staff.*')">
                     <x-slot:icon>
@@ -160,7 +157,6 @@
                     </x-slot:icon>
                     বেতন / Payroll
                 </x-nav-link>
->>>>>>> worktree-agent-abb913b0c993b2705
                 @endif
 
                 @if (config('kcam.modules.notices'))
@@ -298,8 +294,6 @@
             @endif
         @endif
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         @if (($role === 'owner' || $role === 'accountant') && config('kcam.modules.accounts'))
         <a href="{{ route('accounts.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('accounts.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -307,7 +301,7 @@
             </svg>
             <span class="text-[11px] mt-1">হিসাব</span>
         </a>
-=======
+        @endif
         @if ($role === 'owner' || $role === 'accountant')
             @if (config('kcam.modules.inventory'))
             <a href="{{ route('inventory.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('inventory.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
@@ -317,8 +311,7 @@
                 <span class="text-[11px] mt-1">স্টক</span>
             </a>
             @endif
->>>>>>> worktree-agent-a0943159e82c7c632
-=======
+        @endif
         @if ($role === 'owner' && config('kcam.modules.payroll'))
         <a href="{{ route('payroll.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('payroll.*', 'staff.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -326,7 +319,6 @@
             </svg>
             <span class="text-[11px] mt-1">বেতন</span>
         </a>
->>>>>>> worktree-agent-abb913b0c993b2705
         @endif
 
         @if (config('kcam.modules.notices'))

@@ -13,8 +13,6 @@ use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\PortalController;
-    });
-
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
