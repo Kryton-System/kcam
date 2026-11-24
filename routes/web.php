@@ -11,6 +11,8 @@ use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TransportController;
+use App\Http\Controllers\TransportVehicleController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint for uptime monitoring & Gate E
@@ -73,5 +75,23 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('notices')->name('notices.')->middleware('module:notices')->group(function (): void {
         Route::get('/', [NoticeController::class, 'index'])->middleware('can:view-notices')->name('index');
         Route::post('/', [NoticeController::class, 'store'])->middleware('can:send-notices')->name('store');
+    });
+
+    // Transport: routes, vehicles and student assignments
+    Route::prefix('transport')->name('transport.')->middleware('module:transport')->group(function (): void {
+        Route::get('/', [TransportController::class, 'index'])->middleware('can:view-transport')->name('index');
+        Route::get('/routes/create', [TransportController::class, 'create'])->middleware('can:manage-transport')->name('routes.create');
+        Route::post('/routes', [TransportController::class, 'store'])->middleware('can:manage-transport')->name('routes.store');
+        Route::get('/routes/{transportRoute}', [TransportController::class, 'show'])->middleware('can:view-transport')->name('routes.show');
+        Route::get('/routes/{transportRoute}/print', [TransportController::class, 'print'])->middleware('can:view-transport')->name('routes.print');
+        Route::get('/routes/{transportRoute}/edit', [TransportController::class, 'edit'])->middleware('can:manage-transport')->name('routes.edit');
+        Route::put('/routes/{transportRoute}', [TransportController::class, 'update'])->middleware('can:manage-transport')->name('routes.update');
+        Route::post('/routes/{transportRoute}/students', [TransportController::class, 'assign'])->middleware('can:manage-transport')->name('routes.assign');
+        Route::delete('/assignments/{assignment}', [TransportController::class, 'unassign'])->middleware('can:manage-transport')->name('assignments.destroy');
+
+        Route::get('/vehicles/create', [TransportVehicleController::class, 'create'])->middleware('can:manage-transport')->name('vehicles.create');
+        Route::post('/vehicles', [TransportVehicleController::class, 'store'])->middleware('can:manage-transport')->name('vehicles.store');
+        Route::get('/vehicles/{vehicle}/edit', [TransportVehicleController::class, 'edit'])->middleware('can:manage-transport')->name('vehicles.edit');
+        Route::put('/vehicles/{vehicle}', [TransportVehicleController::class, 'update'])->middleware('can:manage-transport')->name('vehicles.update');
     });
 });

@@ -62,6 +62,10 @@ class RoleAndPermissionSeeder extends Seeder
             'send-sms',
             'view-sms-logs',
 
+            // Transport
+            'view-transport',
+            'manage-transport',
+
             // Audit & System
             'view-audit-logs',
             'manage-subscriptions',
@@ -107,6 +111,8 @@ class RoleAndPermissionSeeder extends Seeder
             'send-sms',
             'view-sms-logs',
             'view-audit-logs',
+            'view-transport',
+            'manage-transport',
         ]);
 
         // 3. Teacher
@@ -119,6 +125,7 @@ class RoleAndPermissionSeeder extends Seeder
             'enter-marks',
             'view-notices',
             'send-notices',
+            'view-transport',
         ]);
 
         // 4. Accountant

@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Requests;
+
+use App\Domain\Student\Models\Enrollment;
+use App\Http\Requests\Concerns\NormalizesInput;
+use App\Support\Money;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use InvalidArgumentException;
+
+class AssignStudentRequest extends FormRequest
+{
+    use NormalizesInput;
+
+    public function authorize(): bool
+    {
+        return $this->user()?->can('manage-transport') ?? false;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeInput(
+            textFields: ['stop'],
+            digitFields: ['enrollment_id', 'monthly_fee'],
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        return [
+            'enrollment_id' => ['required', 'integer'],
+            'stop' => ['nullable', 'string', 'max:150'],
+            'monthly_fee' => ['required', 'string', 'regex:/^\d{1,9}(\.\d{1,2})?$/'],
+        ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            if ($validator->errors()->has('enrollment_id')) {
+                return;
+            }
+
+            $currentYearId = $this->user()->school?->currentAcademicYear()?->id;
+            $valid = $currentYearId !== null && Enrollment::query()
+                ->whereKey((int) $this->input('enrollment_id'))
+                ->where('academic_year_id', $currentYearId)
+                ->where('status', 'active')
+                ->exists();
+
+            if (! $valid) {
+                $validator->errors()->add('enrollment_id', 'সক্রিয় শিক্ষার্থী নির্বাচন করুন / Choose an active student of the current year.');
+            }
+        });
+    }
+
+    /**
+     * The validated monthly fee as whole poisha.
+     *
+     * @throws InvalidArgumentException when called before validation passed
+     */
+    public function feePoisha(): int
+    {
+        return Money::toPoisha((string) $this->validated('monthly_fee'));
+    }
+}
