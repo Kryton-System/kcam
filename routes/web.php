@@ -10,6 +10,7 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\PortalController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,5 +74,11 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('notices')->name('notices.')->middleware('module:notices')->group(function (): void {
         Route::get('/', [NoticeController::class, 'index'])->middleware('can:view-notices')->name('index');
         Route::post('/', [NoticeController::class, 'store'])->middleware('can:send-notices')->name('store');
+    });
+
+    // Parent portal (read only, own children only)
+    Route::prefix('portal')->name('portal.')->middleware('module:portal')->group(function (): void {
+        Route::get('/', [PortalController::class, 'index'])->middleware('can:view-portal')->name('index');
+        Route::get('/children/{student}', [PortalController::class, 'show'])->middleware('can:view-portal')->name('children.show');
     });
 });

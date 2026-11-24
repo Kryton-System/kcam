@@ -60,6 +60,17 @@
                     ড্যাশবোর্ড
                 </x-nav-link>
 
+                @if ($role === 'parent' && config('kcam.modules.portal'))
+                    <x-nav-link :href="route('portal.index')" :active="request()->routeIs('portal.*')">
+                        <x-slot:icon>
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </x-slot:icon>
+                        আমার সন্তান / My Children
+                    </x-nav-link>
+                @endif
+
                 @if ($role === 'owner' || $role === 'teacher')
                     @if (config('kcam.modules.attendance'))
                     <x-nav-link :href="route('attendance.index')" :active="request()->routeIs('attendance.*')">
@@ -193,6 +204,15 @@
             </svg>
             <span class="text-[11px] mt-1">হোম</span>
         </a>
+
+        @if ($role === 'parent' && config('kcam.modules.portal'))
+            <a href="{{ route('portal.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('portal.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <span class="text-[11px] mt-1">সন্তান</span>
+            </a>
+        @endif
 
         @if ($role === 'owner' || $role === 'teacher')
             @if (config('kcam.modules.attendance'))

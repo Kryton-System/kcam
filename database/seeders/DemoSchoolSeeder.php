@@ -286,7 +286,7 @@ class DemoSchoolSeeder extends Seeder
                 'name' => 'Guardian of '.$studentItem['name'],
                 'name_bn' => 'অভিভাবক '.$studentItem['name_bn'],
                 'relation' => 'father',
-                'mobile' => '018'.rand(10000000, 99999999),
+                'mobile' => $studentItem['code'] === 'STU-001' ? '01744444444' : '018'.rand(10000000, 99999999),
                 'is_primary' => true,
             ]);
 

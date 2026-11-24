@@ -62,6 +62,9 @@ class RoleAndPermissionSeeder extends Seeder
             'send-sms',
             'view-sms-logs',
 
+            // Parent portal (Parent role only)
+            'view-portal',
+
             // Audit & System
             'view-audit-logs',
             'manage-subscriptions',
@@ -73,7 +76,7 @@ class RoleAndPermissionSeeder extends Seeder
 
         // 1. Super Admin
         $superAdminRole = Role::firstOrCreate(['name' => UserRole::SuperAdmin->value, 'guard_name' => 'web']);
-        $superAdminRole->syncPermissions(Permission::all());
+        $superAdminRole->syncPermissions(Permission::where('name', '!=', 'view-portal')->get());
 
         // 2. School Owner (all school operations)
         $ownerRole = Role::firstOrCreate(['name' => UserRole::Owner->value, 'guard_name' => 'web']);
@@ -139,6 +142,7 @@ class RoleAndPermissionSeeder extends Seeder
             'view-fees',
             'view-exams',
             'view-notices',
+            'view-portal',
         ]);
     }
 }
