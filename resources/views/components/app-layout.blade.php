@@ -119,6 +119,7 @@
                 @endif
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 @if (($role === 'owner' || $role === 'accountant') && config('kcam.modules.accounts'))
                 <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
                     <x-slot:icon>
@@ -141,6 +142,25 @@
                     </x-nav-link>
                     @endif
 >>>>>>> worktree-agent-a0943159e82c7c632
+=======
+                @if ($role === 'owner' && config('kcam.modules.payroll'))
+                <x-nav-link :href="route('staff.index')" :active="request()->routeIs('staff.*')">
+                    <x-slot:icon>
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </x-slot:icon>
+                    কর্মী / Staff
+                </x-nav-link>
+                <x-nav-link :href="route('payroll.index')" :active="request()->routeIs('payroll.*')">
+                    <x-slot:icon>
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </x-slot:icon>
+                    বেতন / Payroll
+                </x-nav-link>
+>>>>>>> worktree-agent-abb913b0c993b2705
                 @endif
 
                 @if (config('kcam.modules.notices'))
@@ -268,6 +288,7 @@
         @endif
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         @if (($role === 'owner' || $role === 'accountant') && config('kcam.modules.accounts'))
         <a href="{{ route('accounts.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('accounts.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -286,6 +307,15 @@
             </a>
             @endif
 >>>>>>> worktree-agent-a0943159e82c7c632
+=======
+        @if ($role === 'owner' && config('kcam.modules.payroll'))
+        <a href="{{ route('payroll.index') }}" class="flex-1 flex flex-col items-center justify-center py-1 touch-target {{ request()->routeIs('payroll.*', 'staff.*') ? 'text-emerald-700 font-bold' : 'text-slate-500' }}">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-[11px] mt-1">বেতন</span>
+        </a>
+>>>>>>> worktree-agent-abb913b0c993b2705
         @endif
 
         @if (config('kcam.modules.notices'))
