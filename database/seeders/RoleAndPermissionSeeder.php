@@ -28,6 +28,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage-classes',
             'manage-subjects',
             'manage-staff',
+            'manage-payroll',
 
             // Students
             'view-students',
@@ -83,6 +84,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage-classes',
             'manage-subjects',
             'manage-staff',
+            'manage-payroll',
             'view-students',
             'create-students',
             'edit-students',

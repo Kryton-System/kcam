@@ -10,6 +10,8 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,5 +75,23 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('notices')->name('notices.')->middleware('module:notices')->group(function (): void {
         Route::get('/', [NoticeController::class, 'index'])->middleware('can:view-notices')->name('index');
         Route::post('/', [NoticeController::class, 'store'])->middleware('can:send-notices')->name('store');
+    });
+
+    // Staff (owner only)
+    Route::prefix('staff')->name('staff.')->middleware('module:payroll')->group(function (): void {
+        Route::get('/', [StaffController::class, 'index'])->middleware('can:manage-staff')->name('index');
+        Route::get('/create', [StaffController::class, 'create'])->middleware('can:manage-staff')->name('create');
+        Route::post('/', [StaffController::class, 'store'])->middleware('can:manage-staff')->name('store');
+        Route::get('/{staff}/edit', [StaffController::class, 'edit'])->middleware('can:manage-staff')->name('edit');
+        Route::put('/{staff}', [StaffController::class, 'update'])->middleware('can:manage-staff')->name('update');
+    });
+
+    // Payroll (owner only)
+    Route::prefix('payroll')->name('payroll.')->middleware('module:payroll')->group(function (): void {
+        Route::get('/', [PayrollController::class, 'index'])->middleware('can:manage-payroll')->name('index');
+        Route::post('/generate', [PayrollController::class, 'generate'])->middleware('can:manage-payroll')->name('generate');
+        Route::get('/{payslip}', [PayrollController::class, 'show'])->middleware('can:manage-payroll')->name('show');
+        Route::put('/{payslip}', [PayrollController::class, 'update'])->middleware('can:manage-payroll')->name('update');
+        Route::post('/{payslip}/pay', [PayrollController::class, 'pay'])->middleware('can:manage-payroll')->name('pay');
     });
 });
