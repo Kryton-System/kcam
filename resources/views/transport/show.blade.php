@@ -1,6 +1,7 @@
 @php
     use App\Support\Helpers\BanglaHelper;
     $canManage = auth()->user()->can('manage-transport');
+    $canSeeFees = $canManage;
     $capacity = $route->vehicle?->capacity;
     $totalFee = $assignments->sum('monthly_fee');
 @endphp
@@ -25,15 +26,17 @@
         </div>
     </x-slot:header>
 
-    <div class="grid grid-cols-2 gap-3 mb-6">
+    <div class="grid {{ $canSeeFees ? 'grid-cols-2' : 'grid-cols-1' }} gap-3 mb-6">
         <x-card>
             <p class="text-xs text-slate-500">আসন / Seats</p>
             <p class="text-lg font-bold">{{ BanglaHelper::toBanglaDigits((string) $assignments->count()) }} / {{ $capacity !== null ? BanglaHelper::toBanglaDigits((string) $capacity) : '-' }}</p>
         </x-card>
-        <x-card>
-            <p class="text-xs text-slate-500">মাসিক মোট / Monthly total</p>
-            <p class="text-lg font-bold">{{ BanglaHelper::formatTaka($totalFee, true) }}</p>
-        </x-card>
+        @if ($canSeeFees)
+            <x-card>
+                <p class="text-xs text-slate-500">মাসিক মোট / Monthly total</p>
+                <p class="text-lg font-bold">{{ BanglaHelper::formatTaka($totalFee, true) }}</p>
+            </x-card>
+        @endif
     </div>
 
     @if ($route->stopList())
@@ -70,13 +73,15 @@
         @if ($assignments->isEmpty())
             <x-empty-state title="কোনো শিক্ষার্থী নেই / No students" description="শিক্ষার্থী যোগ করলে এখানে দেখা যাবে / Assigned students appear here." />
         @else
-            <x-table :headers="['শিক্ষার্থী / Student', 'শ্রেণি / Class', 'স্টপ / Stop', 'মাসিক ভাড়া / Fee', '']">
+            <x-table :headers="$canSeeFees ? ['শিক্ষার্থী / Student', 'শ্রেণি / Class', 'স্টপ / Stop', 'মাসিক ভাড়া / Fee', ''] : ['শিক্ষার্থী / Student', 'শ্রেণি / Class', 'স্টপ / Stop', '']">
                 @foreach ($assignments as $assignment)
                     <tr>
                         <td class="px-4 py-3 font-semibold text-slate-900">{{ $assignment->enrollment->student->name_bn ?? $assignment->enrollment->student->name }}</td>
                         <td class="px-4 py-3 text-slate-700">{{ $assignment->enrollment->schoolClass?->name_bn ?? $assignment->enrollment->schoolClass?->name }}</td>
                         <td class="px-4 py-3 text-slate-700">{{ $assignment->stop ?? '-' }}</td>
-                        <td class="px-4 py-3 text-slate-700">{{ BanglaHelper::formatTaka($assignment->monthly_fee, true) }}</td>
+                        @if ($canSeeFees)
+                            <td class="px-4 py-3 text-slate-700">{{ BanglaHelper::formatTaka($assignment->monthly_fee, true) }}</td>
+                        @endif
                         <td class="px-4 py-3 text-right">
                             @if ($canManage)
                                 <form method="POST" action="{{ route('transport.assignments.destroy', $assignment) }}" onsubmit="return confirm('সরাতে চান? / Remove this student?')">

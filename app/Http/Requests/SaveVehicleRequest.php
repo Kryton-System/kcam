@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Domain\Transport\Models\TransportAssignment;
 use App\Domain\Transport\Models\TransportVehicle;
 use App\Http\Requests\Concerns\NormalizesInput;
 use Illuminate\Contracts\Validation\Validator;
@@ -60,15 +59,10 @@ class SaveVehicleRequest extends FormRequest
                 return;
             }
 
-            $busiest = TransportAssignment::query()
-                ->whereIn('route_id', $vehicle->routes()->pluck('id'))
-                ->selectRaw('route_id, count(*) as riders')
-                ->groupBy('route_id')
-                ->orderByDesc('riders')
-                ->value('riders');
+            $riders = $vehicle->riderCount();
 
-            if ((int) $this->input('capacity') < (int) $busiest) {
-                $validator->errors()->add('capacity', "ইতিমধ্যে {$busiest} জন শিক্ষার্থী আছে / Capacity cannot be below the {$busiest} riders already assigned.");
+            if ((int) $this->input('capacity') < $riders) {
+                $validator->errors()->add('capacity', "ইতিমধ্যে {$riders} জন শিক্ষার্থী আছে / Capacity cannot be below the {$riders} riders already assigned.");
             }
         });
     }

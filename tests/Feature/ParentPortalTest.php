@@ -18,6 +18,7 @@ use App\Domain\Student\Models\Guardian;
 use App\Domain\Student\Models\Student;
 use App\Models\User;
 use App\Support\Enums\UserRole;
+use App\Support\Helpers\BanglaHelper;
 use App\Support\Tenancy\CurrentSchool;
 
 /**
@@ -67,6 +68,21 @@ test('dashboard redirects a parent to the portal', function (): void {
     $family = portalFamily();
 
     $this->actingAs($family['parent'])->get(route('dashboard'))->assertRedirect(route('portal.index'));
+});
+
+test('a parent never gets the school finance dashboard when the portal is off', function (): void {
+    config(['kcam.modules.portal' => false]);
+    $family = portalFamily();
+    CurrentSchool::runAs($family['parent']->school_id, function () use ($family): void {
+        Invoice::factory()->create([
+            'school_id' => $family['parent']->school_id, 'month' => now()->format('Y-m'),
+            'total' => 123400, 'paid' => 0, 'due' => 123400,
+        ]);
+    });
+
+    $this->actingAs($family['parent'])->get(route('dashboard'))
+        ->assertForbidden()
+        ->assertDontSee(BanglaHelper::formatTaka(123400, true));
 });
 
 test('dashboard does not redirect staff', function (): void {

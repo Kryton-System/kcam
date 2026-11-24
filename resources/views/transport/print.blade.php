@@ -1,5 +1,6 @@
 @php
     use App\Support\Helpers\BanglaHelper;
+    $canSeeFees = auth()->user()->can('manage-transport');
 @endphp
 <!DOCTYPE html>
 <html lang="bn">
@@ -39,7 +40,9 @@
                 <th>শিক্ষার্থী / Student</th>
                 <th>শ্রেণি / Class</th>
                 <th>স্টপ / Stop</th>
-                <th>মাসিক ভাড়া / Fee</th>
+                @if ($canSeeFees)
+                    <th>মাসিক ভাড়া / Fee</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -49,14 +52,18 @@
                     <td>{{ $assignment->enrollment->student->name_bn ?? $assignment->enrollment->student->name }}</td>
                     <td>{{ $assignment->enrollment->schoolClass?->name_bn ?? $assignment->enrollment->schoolClass?->name }}</td>
                     <td>{{ $assignment->stop ?? '-' }}</td>
-                    <td>{{ BanglaHelper::formatTaka($assignment->monthly_fee, true) }}</td>
+                    @if ($canSeeFees)
+                        <td>{{ BanglaHelper::formatTaka($assignment->monthly_fee, true) }}</td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="4">মোট / Total ({{ BanglaHelper::toBanglaDigits((string) $assignments->count()) }})</th>
-                <th>{{ BanglaHelper::formatTaka($assignments->sum('monthly_fee'), true) }}</th>
+                <th colspan="{{ $canSeeFees ? 4 : 3 }}">মোট / Total ({{ BanglaHelper::toBanglaDigits((string) $assignments->count()) }})</th>
+                @if ($canSeeFees)
+                    <th>{{ BanglaHelper::formatTaka($assignments->sum('monthly_fee'), true) }}</th>
+                @endif
             </tr>
         </tfoot>
     </table>

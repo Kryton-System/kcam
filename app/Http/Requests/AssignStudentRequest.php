@@ -15,6 +15,12 @@ class AssignStudentRequest extends FormRequest
 {
     use NormalizesInput;
 
+    /**
+     * The transport_assignments.monthly_fee column is an unsigned 32-bit integer in poisha,
+     * so the largest storable fee is 40,000,000 taka.
+     */
+    public const MAX_FEE_POISHA = 4_000_000_000;
+
     public function authorize(): bool
     {
         return $this->user()?->can('manage-transport') ?? false;
@@ -42,6 +48,16 @@ class AssignStudentRequest extends FormRequest
 
     public function withValidator(Validator $validator): void
     {
+        $validator->after(function (Validator $validator): void {
+            if ($validator->errors()->has('monthly_fee')) {
+                return;
+            }
+
+            if (Money::toPoisha((string) $this->input('monthly_fee')) > self::MAX_FEE_POISHA) {
+                $validator->errors()->add('monthly_fee', 'মাসিক ভাড়া ৪ কোটি টাকার বেশি হতে পারবে না / The monthly fee cannot exceed 40,000,000 taka.');
+            }
+        });
+
         $validator->after(function (Validator $validator): void {
             if ($validator->errors()->has('enrollment_id')) {
                 return;

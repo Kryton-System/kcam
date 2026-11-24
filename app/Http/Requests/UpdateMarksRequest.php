@@ -8,6 +8,7 @@ use App\Domain\School\Models\Subject;
 use App\Domain\Student\Models\Enrollment;
 use App\Support\Helpers\BanglaHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class UpdateMarksRequest extends FormRequest
@@ -37,7 +38,10 @@ class UpdateMarksRequest extends FormRequest
         $subject = Subject::query()->find((int) $this->input('subject_id'));
 
         return [
-            'subject_id' => ['required', 'integer', 'exists:subjects,id'],
+            'subject_id' => [
+                'required', 'integer',
+                Rule::exists('subjects', 'id')->where('school_id', $this->user()->school_id),
+            ],
             'marks' => ['required', 'array'],
             'marks.*' => ['nullable', 'numeric', 'min:0', 'max:'.($subject?->full_marks ?? 100)],
         ];

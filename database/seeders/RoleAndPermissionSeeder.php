@@ -159,7 +159,6 @@ class RoleAndPermissionSeeder extends Seeder
         $parentRole->syncPermissions([
             'view-attendance',
             'view-fees',
-            'view-exams',
             'view-notices',
             'view-portal',
         ]);

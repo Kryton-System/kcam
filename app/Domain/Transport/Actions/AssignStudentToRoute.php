@@ -6,14 +6,15 @@ namespace App\Domain\Transport\Actions;
 
 use App\Domain\Transport\Models\TransportAssignment;
 use App\Domain\Transport\Models\TransportRoute;
+use App\Domain\Transport\Models\TransportVehicle;
 use App\Domain\Transport\TransportException;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Puts one enrolled student on a route. The fee is whole poisha. The seat check and the
- * insert run in one transaction with the route row locked, so two clerks cannot both
- * take the last seat.
+ * insert run in one transaction with the vehicle row locked, because several routes can
+ * share one van and the seats are counted across all of them.
  */
 class AssignStudentToRoute
 {
@@ -29,7 +30,9 @@ class AssignStudentToRoute
                 throw new TransportException('এই রুটে কোনো গাড়ি নেই / This route has no vehicle yet.');
             }
 
-            if ($locked->assignments()->count() >= $locked->vehicle->capacity) {
+            $vehicle = TransportVehicle::query()->whereKey($locked->vehicle->id)->lockForUpdate()->firstOrFail();
+
+            if ($vehicle->riderCount() >= $vehicle->capacity) {
                 throw new TransportException('গাড়ির আসন পূর্ণ / The vehicle is full.');
             }
 

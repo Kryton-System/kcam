@@ -117,6 +117,49 @@ describe('generating a payroll run', function (): void {
             ->and($fresh->net)->toBe(985000);
     });
 
+    test('a run that fails part way leaves no payslips behind', function (): void {
+        $school = School::factory()->create();
+        makeStaff($school, ['salary_basic' => 1000000]);
+        makeStaff($school, ['salary_basic' => 2000000]);
+        $armed = true;
+        $inserts = 0;
+        Payslip::creating(function () use (&$armed, &$inserts): void {
+            if ($armed && ++$inserts === 2) {
+                throw new RuntimeException('simulated failure on the second payslip');
+            }
+        });
+
+        try {
+            expect(fn () => app(GeneratePayslipsAction::class)->execute($school->id, '2026-05'))
+                ->toThrow(RuntimeException::class);
+        } finally {
+            $armed = false;
+        }
+        expect(payslipCount($school))->toBe(0);
+    });
+
+    test('a slip inserted by a concurrent run is skipped instead of failing the batch', function (): void {
+        $school = School::factory()->create();
+        $raced = makeStaff($school, ['salary_basic' => 1000000]);
+        makeStaff($school, ['salary_basic' => 2000000]);
+        $armed = true;
+        Payslip::creating(function (Payslip $slip) use (&$armed, $school, $raced): void {
+            if (! $armed) {
+                return;
+            }
+            $armed = false;
+            DB::table('payslips')->insert([
+                'school_id' => $school->id, 'staff_id' => $raced->id, 'month' => '2026-06',
+                'basic' => 1000000, 'deductions' => 0, 'advances' => 0, 'net' => 1000000,
+                'status' => 'pending', 'created_at' => now(), 'updated_at' => now(),
+            ]);
+        });
+
+        $created = app(GeneratePayslipsAction::class)->execute($school->id, '2026-06');
+
+        expect($created)->toBe(1)->and(payslipCount($school))->toBe(2);
+    });
+
     test('a later hire gets a payslip on a second run of the same month', function (): void {
         $school = School::factory()->create();
         makeStaff($school);

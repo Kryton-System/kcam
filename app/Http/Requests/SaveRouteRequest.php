@@ -55,10 +55,10 @@ class SaveRouteRequest extends FormRequest
                 return;
             }
 
-            $riders = $route->assignments()->count();
+            $ridersOnVan = $vehicle->riderCount(exceptRouteId: $route->id) + $route->assignments()->count();
 
-            if ($vehicle->capacity < $riders) {
-                $validator->errors()->add('vehicle_id', "এই গাড়িতে {$riders} জনের আসন নেই / This vehicle has fewer seats than the {$riders} riders on the route.");
+            if ($vehicle->capacity < $ridersOnVan) {
+                $validator->errors()->add('vehicle_id', "এই গাড়িতে {$ridersOnVan} জনের আসন নেই / This vehicle would carry {$ridersOnVan} riders, more than its {$vehicle->capacity} seats.");
             }
         });
     }

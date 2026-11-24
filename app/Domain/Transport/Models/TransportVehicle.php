@@ -31,4 +31,17 @@ class TransportVehicle extends Model
     {
         return $this->hasMany(TransportRoute::class, 'vehicle_id');
     }
+
+    /**
+     * Riders across every route that runs on this van. Several routes can share one van,
+     * so the seats are a vehicle-wide budget, not a per-route one.
+     */
+    public function riderCount(?int $exceptRouteId = null): int
+    {
+        $routeIds = $this->routes()
+            ->when($exceptRouteId !== null, fn ($query) => $query->whereKeyNot($exceptRouteId))
+            ->select('id');
+
+        return TransportAssignment::query()->whereIn('route_id', $routeIds)->count();
+    }
 }

@@ -390,3 +390,111 @@ test('teacher sees the menu entry but no manage buttons', function (): void {
         ->assertDontSee(route('transport.routes.create'), false)
         ->assertDontSee(route('transport.vehicles.create'), false);
 });
+
+function sharedVanRoute(School $school, TransportVehicle $vehicle): TransportRoute
+{
+    return CurrentSchool::runAs($school->id, fn (): TransportRoute => TransportRoute::factory()
+        ->create(['school_id' => $school->id, 'vehicle_id' => $vehicle->id])
+        ->load('vehicle'));
+}
+
+test('riders on routes that share one van count against the van capacity', function (): void {
+    $owner = schoolUser(UserRole::Owner);
+    $van = CurrentSchool::runAs($owner->school_id, fn () => TransportVehicle::factory()->create(['school_id' => $owner->school_id, 'capacity' => 2]));
+    $routeA = sharedVanRoute($owner->school, $van);
+    $routeB = sharedVanRoute($owner->school, $van);
+    $payload = fn (): array => ['enrollment_id' => transportEnrollment($owner->school)->id, 'monthly_fee' => '500'];
+
+    $this->actingAs($owner)->post(route('transport.routes.assign', $routeA), $payload())->assertSessionHasNoErrors();
+    $this->actingAs($owner)->post(route('transport.routes.assign', $routeA), $payload())->assertSessionHasNoErrors();
+    $this->actingAs($owner)->post(route('transport.routes.assign', $routeB), $payload())->assertSessionHasErrors('enrollment_id');
+
+    expect(transportCount($owner->school, TransportAssignment::class))->toBe(2);
+});
+
+test('lowering van capacity counts riders on every route of that van', function (): void {
+    $owner = schoolUser(UserRole::Owner);
+    $van = CurrentSchool::runAs($owner->school_id, fn () => TransportVehicle::factory()->create(['school_id' => $owner->school_id, 'capacity' => 3]));
+    foreach ([sharedVanRoute($owner->school, $van), sharedVanRoute($owner->school, $van)] as $route) {
+        CurrentSchool::runAs($owner->school_id, fn () => TransportAssignment::factory()->create([
+            'school_id' => $owner->school_id, 'route_id' => $route->id,
+            'enrollment_id' => transportEnrollment($owner->school)->id,
+        ]));
+    }
+    $payload = ['van_number' => $van->van_number, 'driver_name' => 'Karim', 'driver_mobile' => '01812345678'];
+
+    $this->actingAs($owner)->put(route('transport.vehicles.update', $van), $payload + ['capacity' => '1'])
+        ->assertSessionHasErrors('capacity');
+    $this->actingAs($owner)->put(route('transport.vehicles.update', $van), $payload + ['capacity' => '2'])
+        ->assertSessionHasNoErrors();
+});
+
+test('moving a route to another van counts the riders already on that van', function (): void {
+    $owner = schoolUser(UserRole::Owner);
+    $target = CurrentSchool::runAs($owner->school_id, fn () => TransportVehicle::factory()->create(['school_id' => $owner->school_id, 'capacity' => 2]));
+    $resident = sharedVanRoute($owner->school, $target);
+    $mover = transportRoute($owner->school, 5);
+    CurrentSchool::runAs($owner->school_id, function () use ($owner, $resident, $mover): void {
+        TransportAssignment::factory()->create(['school_id' => $owner->school_id, 'route_id' => $resident->id, 'enrollment_id' => transportEnrollment($owner->school)->id]);
+        foreach ([1, 2] as $ignored) {
+            TransportAssignment::factory()->create(['school_id' => $owner->school_id, 'route_id' => $mover->id, 'enrollment_id' => transportEnrollment($owner->school)->id]);
+        }
+    });
+
+    $this->actingAs($owner)->put(route('transport.routes.update', $mover), ['name' => 'Moved', 'vehicle_id' => $target->id])
+        ->assertSessionHasErrors('vehicle_id');
+    expect(CurrentSchool::runAs($owner->school_id, fn () => TransportRoute::find($mover->id)->vehicle_id))->toBe($mover->vehicle_id);
+});
+
+test('teacher sees the roster and print sheet without any fee amount', function (): void {
+    $teacher = schoolUser(UserRole::Teacher);
+    $route = transportRoute($teacher->school, 5);
+    $enrollment = transportEnrollment($teacher->school);
+    CurrentSchool::runAs($teacher->school_id, fn () => TransportAssignment::factory()->create([
+        'school_id' => $teacher->school_id, 'route_id' => $route->id, 'enrollment_id' => $enrollment->id, 'monthly_fee' => 80050,
+    ]));
+    $name = CurrentSchool::runAs($teacher->school_id, fn () => $enrollment->student->name_bn ?? $enrollment->student->name);
+
+    $this->actingAs($teacher)->get(route('transport.routes.show', $route))
+        ->assertOk()->assertSee($name)
+        ->assertDontSee('৮০০.৫০')->assertDontSee('800.50')
+        ->assertDontSee('মাসিক ভাড়া')->assertDontSee('মাসিক মোট');
+    $this->actingAs($teacher)->get(route('transport.routes.print', $route))
+        ->assertOk()->assertSee($name)
+        ->assertDontSee('৮০০.৫০')->assertDontSee('800.50')
+        ->assertDontSee('মাসিক ভাড়া')->assertDontSee('Fee');
+});
+
+test('owner sees per student fees on the roster and print sheet', function (): void {
+    $owner = schoolUser(UserRole::Owner);
+    $route = transportRoute($owner->school, 5);
+    $enrollment = transportEnrollment($owner->school);
+    CurrentSchool::runAs($owner->school_id, fn () => TransportAssignment::factory()->create([
+        'school_id' => $owner->school_id, 'route_id' => $route->id, 'enrollment_id' => $enrollment->id, 'monthly_fee' => 80050,
+    ]));
+
+    $this->actingAs($owner)->get(route('transport.routes.show', $route))->assertOk()->assertSee('৮০০.৫০');
+    $this->actingAs($owner)->get(route('transport.routes.print', $route))->assertOk()->assertSee('৮০০.৫০');
+});
+
+test('a monthly fee above the storable limit is a validation error', function (string $fee): void {
+    $owner = schoolUser(UserRole::Owner);
+    $route = transportRoute($owner->school);
+    $enrollment = transportEnrollment($owner->school);
+
+    $this->actingAs($owner)->post(route('transport.routes.assign', $route), [
+        'enrollment_id' => $enrollment->id, 'monthly_fee' => $fee,
+    ])->assertSessionHasErrors('monthly_fee');
+    expect(transportCount($owner->school, TransportAssignment::class))->toBe(0);
+})->with(['just above the cap' => ['40000000.01'], 'nine digits' => ['999999999']]);
+
+test('the largest storable monthly fee is accepted and stored in poisha', function (): void {
+    $owner = schoolUser(UserRole::Owner);
+    $route = transportRoute($owner->school);
+
+    $this->actingAs($owner)->post(route('transport.routes.assign', $route), [
+        'enrollment_id' => transportEnrollment($owner->school)->id, 'monthly_fee' => '40000000',
+    ])->assertSessionHasNoErrors();
+
+    expect(CurrentSchool::runAs($owner->school_id, fn () => TransportAssignment::first()->monthly_fee))->toBe(4000000000);
+});

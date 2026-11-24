@@ -25,8 +25,13 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        if ($user->role === UserRole::Parent && config('kcam.modules.portal')) {
-            return redirect()->route('portal.index');
+        if ($user->role === UserRole::Parent) {
+            if (config('kcam.modules.portal')) {
+                return redirect()->route('portal.index');
+            }
+
+            // Parents never see school-wide finance totals, even when the portal is switched off.
+            abort(403, 'অভিভাবক পোর্টাল বন্ধ আছে / The parent portal is turned off for this school.');
         }
 
         $school = $user->school;

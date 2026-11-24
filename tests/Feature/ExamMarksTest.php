@@ -107,3 +107,21 @@ test('another school exam is not found', function (): void {
 
     $this->actingAs($teacher)->get(route('exams.marks.edit', $exam))->assertNotFound();
 });
+
+test('parent cannot open the school-wide exam list', function (): void {
+    $parent = schoolUser(UserRole::Parent);
+
+    $this->actingAs($parent)->get(route('exams.index'))->assertForbidden();
+});
+
+test('a subject from another school is rejected even when the id exists', function (): void {
+    $teacher = schoolUser(UserRole::Teacher);
+    ['exam' => $exam, 'enrollment' => $enrollment] = examSetup($teacher->school);
+    $other = School::factory()->create();
+    $foreignSubject = CurrentSchool::runAs($other->id, fn () => Subject::factory()->create(['school_id' => $other->id]));
+
+    $this->actingAs($teacher)->put(route('exams.marks.update', $exam), [
+        'subject_id' => $foreignSubject->id, 'marks' => [$enrollment->id => '50'],
+    ])->assertSessionHasErrors('subject_id');
+    expect(CurrentSchool::runAs($teacher->school_id, fn () => Mark::count()))->toBe(0);
+});

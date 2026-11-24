@@ -18,7 +18,7 @@ dataset('route permissions', [
     'attendance store' => ['post', '/attendance', [UserRole::Owner, UserRole::Teacher], [UserRole::Accountant, UserRole::Parent]],
     'fees index' => ['get', '/fees', [UserRole::Owner, UserRole::Accountant], [UserRole::Teacher, UserRole::Parent]],
     'fees collect' => ['post', '/fees/{invoice}/collect', [UserRole::Owner, UserRole::Accountant], [UserRole::Teacher, UserRole::Parent]],
-    'exams index' => ['get', '/exams', [UserRole::Owner, UserRole::Teacher, UserRole::Parent], [UserRole::Accountant]],
+    'exams index' => ['get', '/exams', [UserRole::Owner, UserRole::Teacher], [UserRole::Accountant, UserRole::Parent]],
     'notices index' => ['get', '/notices', [UserRole::Owner, UserRole::Teacher, UserRole::Accountant, UserRole::Parent], []],
     'notices store' => ['post', '/notices', [UserRole::Owner, UserRole::Teacher], [UserRole::Accountant, UserRole::Parent]],
 ]);
