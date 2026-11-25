@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 test('guests visiting the home page see the business landing page', function (): void {
+    $this->get(route('locale.switch', 'en'));
+
     $this->get('/')
         ->assertOk()
         ->assertSee('KCAM')
