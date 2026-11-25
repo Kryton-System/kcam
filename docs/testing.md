@@ -167,19 +167,15 @@ Do not run `vendor/bin/pint --test`. There is no `pint.json`, so Pint uses its d
 
 ## Current status (2026-11-26)
 
-The run recorded for 2026-11-26 is not reproduced here (see Open questions).
+The last full run on 2026-11-26 had 426 tests, all passing, with one test flagged as risky by Pest.
 
-The recorded failure is `tests/Feature/ExampleTest.php`, the test named "guests visiting the home page see the business landing page". The failing assertion is `->assertSee('KCAM')` on line 8. The status code assertion before it passes.
+The earlier failure in `tests/Feature/ExampleTest.php` is fixed. The home page defaults to Bangla, so the brand text (`__('app.name')`, which is `কেসিএএম` in `lang/bn/app.php`) did not contain the Latin string `KCAM`. The test now switches the session to English through `locale.switch` before it checks the page.
 
-Cause: the local `.env` sets `APP_LOCALE=bn`. With no session language, `SetLocale` uses Bangla, so the landing page renders `lang="bn"`. The brand text comes from `__('app.name')`, which is `কেসিএএম` in `lang/bn/app.php`, so the Latin string `KCAM` is absent from the page. The page itself is correct for a Bangla default.
-
-The suite has a conflict in its expectations. Two tests in `LocaleSwitchTest.php` ("site defaults to Bangla" and "admission page renders in Bangla by default") expect `APP_LOCALE=bn`, while `ExampleTest` expects the English brand. With `APP_LOCALE=en` the two Bangla-default tests would fail instead. This follows from reading `SetLocale` and the tests. It has not been run.
-
-Options to resolve it (not applied): pin `APP_LOCALE` in `phpunit.xml`, then update the assertions in one place. Asserting the locale explicitly in each test also works.
+Two tests in `LocaleSwitchTest.php` ("site defaults to Bangla" and "admission page renders in Bangla by default") still expect a Bangla default. They depend on the local `APP_LOCALE=bn`, because `phpunit.xml` does not pin the locale. Pinning it there would remove that dependency (not applied).
 
 ## Limitations
 
-- `ExampleTest` (Feature) fails when the local `.env` sets `APP_LOCALE=bn`, because `phpunit.xml` does not pin the locale. The suite depends on the local `APP_LOCALE`.
+- `LocaleSwitchTest` Bangla-default tests depend on the local `APP_LOCALE`. Pinning `APP_LOCALE` in `phpunit.xml` would make them stable.
 - The risky test in the recorded run is not identified (see Open questions).
 - `tests/Unit/ExampleTest.php` is the default skeleton: a PHPUnit class asserting `true`. It tests nothing and could be removed or replaced with a real unit test.
 - Seven Feature files repeat `uses(RefreshDatabase::class)`, which `tests/Pest.php` already applies to every Feature test.
