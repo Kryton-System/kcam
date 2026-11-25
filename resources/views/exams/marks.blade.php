@@ -1,25 +1,25 @@
 <x-app-layout>
-    <x-slot:title>নম্বর এন্ট্রি / Enter marks</x-slot:title>
+    <x-slot:title>{{ __('exams.marks.title') }}</x-slot:title>
 
     <x-slot:header>
         <div>
-            <h1 class="text-xl md:text-2xl font-bold text-slate-900">নম্বর এন্ট্রি / Enter marks</h1>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900">{{ __('exams.marks.title') }}</h1>
             <p class="text-xs md:text-sm text-slate-500 mt-1">{{ $exam->name_bn ?? $exam->name }} / {{ $exam->name }}</p>
         </div>
-        <x-button :href="route('exams.index')" variant="secondary">← পরীক্ষা / Exams</x-button>
+        <x-button :href="route('exams.index')" variant="secondary">{{ __('exams.marks.back') }}</x-button>
     </x-slot:header>
 
     <x-card class="mb-6">
         <form method="GET" class="flex flex-col sm:flex-row gap-3 sm:items-end">
             <div class="flex-1">
-                <x-select name="subject_id" label="বিষয় / Subject" :selected="$subject?->id">
+                <x-select name="subject_id" :label="__('exams.marks.subject')" :selected="$subject?->id">
                     <option value="">-</option>
                     @foreach ($subjects as $s)
                         <option value="{{ $s->id }}">{{ $s->schoolClass?->name_bn ?? $s->schoolClass?->name }} - {{ $s->name_bn ?? $s->name }}</option>
                     @endforeach
                 </x-select>
             </div>
-            <x-button type="submit" variant="secondary">দেখুন / Show</x-button>
+            <x-button type="submit" variant="secondary">{{ __('exams.marks.show') }}</x-button>
         </form>
     </x-card>
 
@@ -29,11 +29,11 @@
             @method('PUT')
             <input type="hidden" name="subject_id" value="{{ $subject->id }}">
 
-            <x-card :title="($subject->name_bn ?? $subject->name).' (পূর্ণমান / Full: '.$subject->full_marks.')'">
+            <x-card :title="__('exams.marks.card_title', ['name' => $subject->name_bn ?? $subject->name, 'full' => $subject->full_marks])">
                 @if ($rows->isEmpty())
-                    <x-empty-state title="কোনো শিক্ষার্থী নেই / No students" description="" />
+                    <x-empty-state :title="__('exams.marks.empty_title')" description="" />
                 @else
-                    <x-table :headers="['রোল / Roll', 'নাম / Name', 'নম্বর / Marks']">
+                    <x-table :headers="[__('exams.marks.col_roll'), __('exams.marks.col_name'), __('exams.marks.col_marks')]">
                         @foreach ($rows as $row)
                             <tr>
                                 <td class="px-4 py-3">{{ $row->roll_no ?? '-' }}</td>
@@ -48,7 +48,7 @@
                         @endforeach
                     </x-table>
                     <div class="flex justify-end mt-4">
-                        <x-button type="submit" variant="primary">সংরক্ষণ / Save</x-button>
+                        <x-button type="submit" variant="primary">{{ __('exams.marks.save') }}</x-button>
                     </div>
                 @endif
             </x-card>

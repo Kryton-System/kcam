@@ -1,37 +1,37 @@
 <x-guest-layout>
     <x-slot:title>
-        নতুন স্কুল নিবন্ধন | কেসিএএম
+        {{ __('auth.register.title') }} | {{ __('app.name') }}
     </x-slot:title>
 
     <div class="mb-6 text-center">
-        <h3 class="text-xl font-bold text-slate-900">আপনার স্কুল নিবন্ধন করুন</h3>
-        <p class="text-xs text-slate-500 mt-1">মাত্র ৩ মিনিটে আপনার স্কুলের হিসাব ও তথ্য ডিজিটাল করুন</p>
+        <h3 class="text-xl font-bold text-slate-900">{{ __('auth.register.heading') }}</h3>
+        <p class="text-xs text-slate-500 mt-1">{{ __('auth.register.subheading') }}</p>
     </div>
 
     <form method="POST" action="{{ route('register') }}" class="space-y-4">
         @csrf
 
         <div class="space-y-3 pb-3 border-b border-slate-100">
-            <h4 class="text-xs font-semibold text-emerald-800 uppercase tracking-wider">১. স্কুলের তথ্য</h4>
+            <h4 class="text-xs font-semibold text-emerald-800 uppercase tracking-wider">{{ __('auth.register.school_section') }}</h4>
 
             <x-input
                 name="name"
-                label="স্কুলের নাম (ইংরেজি)"
-                placeholder="যেমন: Green Valley Kindergarten"
+                :label="__('auth.register.school_name')"
+                :placeholder="__('auth.register.school_name_placeholder')"
                 :value="old('name')"
                 required
             />
 
             <x-input
                 name="name_bn"
-                label="স্কুলের নাম (বাংলায়)"
-                placeholder="যেমন: গ্রিন ভ্যালি কিন্ডারগার্টেন"
+                :label="__('auth.register.school_name_bn')"
+                :placeholder="__('auth.register.school_name_bn_placeholder')"
                 :value="old('name_bn')"
             />
 
             <x-input
                 name="phone"
-                label="স্কুলের অফিসিয়াল ফোন নম্বর"
+                :label="__('auth.register.phone')"
                 placeholder="017xxxxxxxx"
                 :value="old('phone')"
                 required
@@ -39,26 +39,26 @@
 
             <x-input
                 name="address"
-                label="স্কুলের ঠিকানা"
-                placeholder="রোড, এলাকা, উপজেলা/জেলা"
+                :label="__('auth.register.address')"
+                :placeholder="__('auth.register.address_placeholder')"
                 :value="old('address')"
             />
         </div>
 
         <div class="space-y-3 pt-2">
-            <h4 class="text-xs font-semibold text-emerald-800 uppercase tracking-wider">২. প্রধান শিক্ষক / মালিকের তথ্য</h4>
+            <h4 class="text-xs font-semibold text-emerald-800 uppercase tracking-wider">{{ __('auth.register.owner_section') }}</h4>
 
             <x-input
                 name="owner_name"
-                label="আপনার পুরো নাম"
-                placeholder="মালিক বা অধ্যক্ষের নাম"
+                :label="__('auth.register.owner_name')"
+                :placeholder="__('auth.register.owner_name_placeholder')"
                 :value="old('owner_name')"
                 required
             />
 
             <x-input
                 name="owner_email"
-                label="ইমেইল ঠিকানা"
+                :label="__('auth.register.owner_email')"
                 type="email"
                 placeholder="owner@school.com"
                 :value="old('owner_email')"
@@ -67,7 +67,7 @@
 
             <x-input
                 name="owner_password"
-                label="লগইন পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)"
+                :label="__('auth.register.owner_password')"
                 type="password"
                 placeholder="••••••••"
                 required
@@ -75,7 +75,7 @@
 
             <x-input
                 name="owner_password_confirmation"
-                label="পাসওয়ার্ড নিশ্চিত করুন"
+                :label="__('auth.register.owner_password_confirmation')"
                 type="password"
                 placeholder="••••••••"
                 required
@@ -83,14 +83,14 @@
         </div>
 
         <x-button type="submit" variant="primary" block="true" class="mt-4">
-            স্কুল তৈরি করুন ও শুরু করুন
+            {{ __('auth.register.submit') }}
         </x-button>
     </form>
 
     <div class="mt-6 text-center text-sm border-t border-slate-100 pt-4">
-        <span class="text-slate-500 text-xs">পূর্বে অ্যাকাউন্ট তৈরি করেছেন?</span>
+        <span class="text-slate-500 text-xs">{{ __('auth.register.have_account') }}</span>
         <a href="{{ route('login') }}" class="font-semibold text-emerald-700 hover:text-emerald-800 ml-1 text-xs">
-            লগইন করুন
+            {{ __('auth.register.login_link') }}
         </a>
     </div>
 </x-guest-layout>

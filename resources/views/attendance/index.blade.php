@@ -1,25 +1,24 @@
 @php
     use App\Support\Enums\AttendanceStatus;
-    use App\Support\Helpers\BanglaHelper;
 
     $selectedClass = $classes->firstWhere('id', $selectedClassId);
 @endphp
 
 <x-app-layout>
     <x-slot:title>
-        হাজিরা | কেসিএএম
+        {{ __('attendance.index.title') }}
     </x-slot:title>
 
     <x-slot:header>
         <div>
-            <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">হাজিরা খাতা</h1>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">শ্রেণি ও তারিখ বেছে প্রতিটি শিক্ষার্থীর হাজিরা দিন</p>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">{{ __('attendance.index.heading') }}</h1>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">{{ __('attendance.index.subheading') }}</p>
         </div>
     </x-slot:header>
 
     <x-card class="mb-6">
         <form method="GET" action="{{ route('attendance.index') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <x-select name="class_id" label="শ্রেণি" :selected="$selectedClassId">
+            <x-select name="class_id" :label="__('attendance.index.class')" :selected="$selectedClassId">
                 @foreach ($classes as $class)
                     <option value="{{ $class->id }}" @selected($selectedClassId == $class->id)>
                         {{ $class->name_bn ?? $class->name }}
@@ -27,7 +26,7 @@
                 @endforeach
             </x-select>
 
-            <x-select name="section_id" label="শাখা" placeholder="সব শাখা" :selected="$selectedSectionId">
+            <x-select name="section_id" :label="__('attendance.index.section')" :placeholder="__('attendance.index.all_sections')" :selected="$selectedSectionId">
                 @foreach ($selectedClass?->sections ?? [] as $section)
                     <option value="{{ $section->id }}" @selected($selectedSectionId == $section->id)>
                         {{ $section->name_bn ?? $section->name }}
@@ -35,10 +34,10 @@
                 @endforeach
             </x-select>
 
-            <x-input name="date" type="date" label="তারিখ" :value="$date" max="{{ now()->toDateString() }}" />
+            <x-input name="date" type="date" :label="__('attendance.index.date')" :value="$date" max="{{ now()->toDateString() }}" />
 
             <div class="flex items-end">
-                <x-button type="submit" variant="secondary" class="w-full">দেখুন</x-button>
+                <x-button type="submit" variant="secondary" class="w-full">{{ __('attendance.index.show') }}</x-button>
             </div>
         </form>
     </x-card>
@@ -46,8 +45,8 @@
     <x-card>
         @if ($enrollments->isEmpty())
             <x-empty-state
-                title="কোনো শিক্ষার্থী পাওয়া যায়নি"
-                description="এই শ্রেণি বা শাখায় সক্রিয় ভর্তিকৃত শিক্ষার্থী নেই।"
+                :title="__('attendance.index.empty_title')"
+                :description="__('attendance.index.empty_description')"
             />
         @else
             <form method="POST" action="{{ route('attendance.store') }}">
@@ -55,7 +54,7 @@
                 <input type="hidden" name="date" value="{{ $date }}">
 
                 <p class="text-sm text-slate-600 mb-3">
-                    {{ BanglaHelper::formatDate($date) }} | মোট {{ BanglaHelper::toBanglaDigits($enrollments->count()) }} জন
+                    {{ __('attendance.index.summary', ['date' => \App\Support\Helpers\LocaleFormat::date($date), 'count' => \App\Support\Helpers\LocaleFormat::digits($enrollments->count())]) }}
                 </p>
 
                 @error('attendance')
@@ -72,7 +71,7 @@
                             <legend class="sr-only">{{ $enrollment->student->name }}</legend>
                             <div class="flex-1 font-semibold text-slate-900">
                                 <span class="text-slate-500 font-mono text-xs mr-2">
-                                    {{ BanglaHelper::toBanglaDigits($enrollment->roll_no ?? '-') }}
+                                    {{ \App\Support\Helpers\LocaleFormat::digits($enrollment->roll_no ?? '-') }}
                                 </span>
                                 {{ $enrollment->student->name_bn ?? $enrollment->student->name }}
                             </div>
@@ -85,7 +84,7 @@
                                             value="{{ $status->value }}"
                                             @checked($current === $status->value)
                                         >
-                                        {{ $status->labelBn() }}
+                                        {{ $status->label() }}
                                     </label>
                                 @endforeach
                             </div>
@@ -94,7 +93,7 @@
                 </div>
 
                 <div class="mt-5">
-                    <x-button type="submit" variant="primary" size="lg" block>হাজিরা সংরক্ষণ করুন</x-button>
+                    <x-button type="submit" variant="primary" size="lg" block>{{ __('attendance.index.save') }}</x-button>
                 </div>
             </form>
         @endif

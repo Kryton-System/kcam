@@ -39,8 +39,8 @@ describe('payroll authorization', function (): void {
         $owner = schoolUser(UserRole::Owner, $school);
         $payslip = makePayslip($school);
 
-        $this->actingAs($owner)->get('/payroll?month=2026-01')->assertOk()->assertSee('বেতন / Payroll');
-        $this->actingAs($owner)->get("/payroll/{$payslip->id}")->assertOk()->assertSee('বেতন স্লিপ / Payslip');
+        $this->actingAs($owner)->get('/payroll?month=2026-01')->assertOk()->assertSee('বেতন');
+        $this->actingAs($owner)->get("/payroll/{$payslip->id}")->assertOk()->assertSee('বেতন স্লিপ');
     });
 
     test('other roles are denied', function (UserRole $role): void {

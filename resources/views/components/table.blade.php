@@ -2,7 +2,7 @@
     'headers' => [],
 ])
 
-<div class="w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs">
+<div class="w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xs">
     <div class="overflow-x-auto">
         <table data-stack class="min-w-full divide-y divide-slate-200 text-left text-sm">
             @if (! empty($headers))

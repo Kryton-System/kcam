@@ -1,20 +1,18 @@
 @import 'tailwindcss';
 
-@font-face {
-    font-family: 'Kalpurush';
-    src: url('/fonts/kalpurush.ttf') format('truetype');
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-}
-
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../views/**/*.blade.php';
 
+/* Bangla text gets the Bangla stack; keeps Latin digits and names readable inside Bangla pages. */
+:root:lang(bn) {
+    --font-sans: 'Hind Siliguri', 'Noto Sans Bengali', 'Inter', system-ui, sans-serif;
+}
+
 @theme {
-    --font-sans: 'Kalpurush', 'SolaimanLipi', 'Instrument Sans', system-ui, -apple-system, sans-serif;
-    --font-bn: 'Kalpurush', 'SolaimanLipi', sans-serif;
+    /* English pages use Inter; Bangla pages use Hind Siliguri, which has clean Bangla shapes and readable small sizes. */
+    --font-sans: 'Inter', 'Hind Siliguri', 'Noto Sans Bengali', system-ui, -apple-system, sans-serif;
+    --font-bn: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
 
     /* KCAM Primary Palette: Forest & Emerald Green */
     --color-primary-50: #f0fdf4;

@@ -38,7 +38,7 @@ class StaffController extends Controller
     {
         Staff::create($request->staffData());
 
-        return redirect()->route('staff.index')->with('success', 'কর্মী যোগ করা হয়েছে। / Staff added.');
+        return redirect()->route('staff.index')->with('success', __('staff.flash.added'));
     }
 
     public function edit(Staff $staff): View
@@ -50,6 +50,6 @@ class StaffController extends Controller
     {
         $staff->update($request->staffData());
 
-        return redirect()->route('staff.index')->with('success', 'কর্মীর তথ্য হালনাগাদ হয়েছে। / Staff updated.');
+        return redirect()->route('staff.index')->with('success', __('staff.flash.updated'));
     }
 }

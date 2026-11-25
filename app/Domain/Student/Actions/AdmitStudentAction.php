@@ -53,6 +53,7 @@ class AdmitStudentAction
                 'birth_reg_no' => $data['birth_reg_no'] ?? null,
                 'photo' => $data['photo'] ?? null,
                 'blood_group' => $data['blood_group'] ?? null,
+                'religion' => $data['religion'] ?? null,
                 'address' => $data['address'] ?? null,
                 'status' => StudentStatus::Active,
             ]);
@@ -67,6 +68,8 @@ class AdmitStudentAction
                     'relation' => $data['guardian_relation'] ?? 'father',
                     'mobile' => $data['guardian_mobile'] ?? '',
                     'nid' => $data['guardian_nid'] ?? null,
+                    'nid_front_path' => $data['guardian_nid_front_path'] ?? null,
+                    'nid_back_path' => $data['guardian_nid_back_path'] ?? null,
                     'email' => $data['guardian_email'] ?? null,
                     'is_primary' => true,
                 ]);

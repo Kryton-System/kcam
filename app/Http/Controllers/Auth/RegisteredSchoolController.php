@@ -75,6 +75,6 @@ class RegisteredSchoolController extends Controller
         Auth::login($owner);
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard')->with('success', 'বিদ্যালয় সফলভাবে নিবন্ধিত হয়েছে। KCAM এ স্বাগতম!');
+        return redirect()->route('dashboard')->with('success', __('auth.flash.registered'));
     }
 }

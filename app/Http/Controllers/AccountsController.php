@@ -59,7 +59,7 @@ class AccountsController extends Controller
             throw ValidationException::withMessages(['amount' => $exception->getMessage()]);
         }
 
-        return back()->with('success', 'খরচ সংরক্ষিত হয়েছে। / Expense saved.');
+        return back()->with('success', __('accounts.flash.expense_saved'));
     }
 
     public function voidExpense(VoidExpenseRequest $request, Expense $expense, VoidExpense $void): RedirectResponse
@@ -70,7 +70,7 @@ class AccountsController extends Controller
             throw ValidationException::withMessages(['reason' => $exception->getMessage()]);
         }
 
-        return back()->with('success', 'খরচ বাতিল করা হয়েছে। / Expense voided.');
+        return back()->with('success', __('accounts.flash.expense_voided'));
     }
 
     public function storeCategory(StoreExpenseCategoryRequest $request): RedirectResponse
@@ -80,7 +80,7 @@ class AccountsController extends Controller
             ...$request->validated(),
         ]);
 
-        return back()->with('success', 'খাত যুক্ত হয়েছে। / Category added.');
+        return back()->with('success', __('accounts.flash.category_added'));
     }
 
     public function cashBook(AccountsPeriodRequest $request): View

@@ -1,13 +1,12 @@
 @php
-    use App\Support\Helpers\BanglaHelper;
     $school = auth()->user()->school;
 @endphp
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ক্যাশ বুক | Cash book | {{ $date->format('Y-m-d') }}</title>
+    <title>{{ __('accounts.cash_book.title') }} | {{ $date->format('Y-m-d') }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans Bengali', sans-serif; color: #000; margin: 24px; font-size: 14px; }
@@ -23,50 +22,50 @@
 </head>
 <body>
     <form method="GET" action="{{ route('accounts.cash-book') }}" class="bar">
-        <label for="date">তারিখ / Date</label>
+        <label for="date">{{ __('accounts.common.date') }}</label>
         <input type="date" id="date" name="date" value="{{ $date->format('Y-m-d') }}">
-        <button type="submit">দেখুন / Show</button>
-        <button type="button" onclick="window.print()">প্রিন্ট / Print</button>
-        <a href="{{ route('accounts.index') }}">ফিরে যান / Back</a>
+        <button type="submit">{{ __('accounts.common.show') }}</button>
+        <button type="button" onclick="window.print()">{{ __('accounts.cash_book.print') }}</button>
+        <a href="{{ route('accounts.index') }}">{{ __('accounts.cash_book.back') }}</a>
     </form>
 
     <h1>{{ $school?->name_bn ?? $school?->name }}</h1>
-    <h2>দৈনিক ক্যাশ বুক / Daily cash book: {{ $date->format('Y-m-d') }}</h2>
+    <h2>{{ __('accounts.cash_book.daily') }}: {{ $date->format('Y-m-d') }}</h2>
 
-    <h3>আয় / Receipts</h3>
+    <h3>{{ __('accounts.cash_book.receipts') }}</h3>
     <table>
-        <thead><tr><th>শিক্ষার্থী / Student</th><th>মাধ্যম / Method</th><th class="num">পরিমাণ / Amount</th></tr></thead>
+        <thead><tr><th>{{ __('accounts.cash_book.student') }}</th><th>{{ __('accounts.cash_book.method') }}</th><th class="num">{{ __('accounts.common.amount') }}</th></tr></thead>
         <tbody>
             @forelse ($receipts as $payment)
                 <tr>
                     <td>{{ $payment->invoice?->student?->name_bn ?? $payment->invoice?->student?->name ?? '-' }}</td>
-                    <td>{{ $payment->method->value }}</td>
-                    <td class="num">{{ BanglaHelper::formatTaka($payment->amount, true) }}</td>
+                    <td>{{ $payment->method->label() }}</td>
+                    <td class="num">{{ \App\Support\Helpers\LocaleFormat::taka($payment->amount, true) }}</td>
                 </tr>
             @empty
-                <tr><td colspan="3">কিছু নেই / None</td></tr>
+                <tr><td colspan="3">{{ __('accounts.common.none') }}</td></tr>
             @endforelse
         </tbody>
-        <tfoot><tr><td colspan="2">মোট আয় / Total in</td><td class="num">{{ BanglaHelper::formatTaka($totalIn, true) }}</td></tr></tfoot>
+        <tfoot><tr><td colspan="2">{{ __('accounts.cash_book.total_in') }}</td><td class="num">{{ \App\Support\Helpers\LocaleFormat::taka($totalIn, true) }}</td></tr></tfoot>
     </table>
 
-    <h3>ব্যয় / Expenses</h3>
+    <h3>{{ __('accounts.cash_book.expenses') }}</h3>
     <table>
-        <thead><tr><th>খাত / Category</th><th>প্রাপক / Payee</th><th class="num">পরিমাণ / Amount</th></tr></thead>
+        <thead><tr><th>{{ __('accounts.common.category') }}</th><th>{{ __('accounts.common.payee') }}</th><th class="num">{{ __('accounts.common.amount') }}</th></tr></thead>
         <tbody>
             @forelse ($expenses as $expense)
                 <tr>
                     <td>{{ $expense->category->label() }}</td>
                     <td>{{ $expense->payee }}</td>
-                    <td class="num">{{ BanglaHelper::formatTaka($expense->amount, true) }}</td>
+                    <td class="num">{{ \App\Support\Helpers\LocaleFormat::taka($expense->amount, true) }}</td>
                 </tr>
             @empty
-                <tr><td colspan="3">কিছু নেই / None</td></tr>
+                <tr><td colspan="3">{{ __('accounts.common.none') }}</td></tr>
             @endforelse
         </tbody>
-        <tfoot><tr><td colspan="2">মোট ব্যয় / Total out</td><td class="num">{{ BanglaHelper::formatTaka($totalOut, true) }}</td></tr></tfoot>
+        <tfoot><tr><td colspan="2">{{ __('accounts.cash_book.total_out') }}</td><td class="num">{{ \App\Support\Helpers\LocaleFormat::taka($totalOut, true) }}</td></tr></tfoot>
     </table>
 
-    <p><strong>দিনশেষে জের / Day balance (in minus out): {{ BanglaHelper::formatTaka($closing, true) }}</strong></p>
+    <p><strong>{{ __('accounts.cash_book.day_balance') }}: {{ \App\Support\Helpers\LocaleFormat::taka($closing, true) }}</strong></p>
 </body>
 </html>

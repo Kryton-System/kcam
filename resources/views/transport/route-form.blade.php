@@ -4,13 +4,13 @@
 
 <x-app-layout>
     <x-slot:title>
-        রুট | কেসিএএম
+        {{ __('transport.route_form.title') }} | {{ __('app.name') }}
     </x-slot:title>
 
     <x-slot:header>
         <div>
             <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
-                {{ $exists ? 'রুট সম্পাদনা / Edit route' : 'নতুন রুট / New route' }}
+                {{ $exists ? __('transport.route_form.edit_heading') : __('transport.route_form.new_heading') }}
             </h1>
         </div>
     </x-slot:header>
@@ -22,11 +22,11 @@
                 @method('PUT')
             @endif
 
-            <x-input name="name" label="রুট / Route (English)" :value="old('name', $route->name)" required />
-            <x-input name="name_bn" label="রুটের নাম (বাংলা) / Route name (Bangla)" :value="old('name_bn', $route->name_bn)" />
-            <x-textarea name="stops" label="স্টপেজ (প্রতি লাইনে একটি) / Stops (one per line)" rows="5">{{ old('stops', $route->stops) }}</x-textarea>
+            <x-input name="name" :label="__('transport.route_form.name_en')" :value="old('name', $route->name)" required />
+            <x-input name="name_bn" :label="__('transport.route_form.name_bn')" :value="old('name_bn', $route->name_bn)" />
+            <x-textarea name="stops" :label="__('transport.route_form.stops')" rows="5">{{ old('stops', $route->stops) }}</x-textarea>
 
-            <x-select name="vehicle_id" label="গাড়ি / Vehicle" placeholder="নির্বাচন করুন / Choose">
+            <x-select name="vehicle_id" :label="__('transport.common.vehicle')" :placeholder="__('transport.show.choose')">
                 @foreach ($vehicles as $vehicle)
                     <option value="{{ $vehicle->id }}" @selected((string) old('vehicle_id', $route->vehicle_id) === (string) $vehicle->id)>
                         {{ $vehicle->van_number }} ({{ $vehicle->capacity }})
@@ -35,8 +35,8 @@
             </x-select>
 
             <div class="flex gap-2">
-                <x-button type="submit" variant="primary">সংরক্ষণ / Save</x-button>
-                <x-button :href="route('transport.index')" variant="secondary">বাতিল / Cancel</x-button>
+                <x-button type="submit" variant="primary">{{ __('transport.common.save') }}</x-button>
+                <x-button :href="route('transport.index')" variant="secondary">{{ __('transport.common.cancel') }}</x-button>
             </div>
         </form>
     </x-card>

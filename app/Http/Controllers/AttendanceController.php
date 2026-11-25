@@ -81,6 +81,6 @@ class AttendanceController extends Controller
             }
         }
 
-        return back()->with('success', 'হাজিরা সফলভাবে সংরক্ষণ করা হয়েছে।');
+        return back()->with('success', __('attendance.flash.saved'));
     }
 }

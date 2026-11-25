@@ -15,14 +15,8 @@ enum StudentStatus: string
     case Graduated = 'graduated';
     case Dropped = 'dropped';
 
-    public function labelBn(): string
+    public function label(): string
     {
-        return match ($this) {
-            self::Active => 'সক্রিয়',
-            self::Inactive => 'নিষ্ক্রিয়',
-            self::Transferred => 'বদলি',
-            self::Graduated => 'পাশ',
-            self::Dropped => 'ঝরে পড়া',
-        };
+        return __('enums.student_status.'.$this->value);
     }
 }

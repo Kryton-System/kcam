@@ -70,6 +70,6 @@ class FeeController extends Controller
             throw ValidationException::withMessages(['amount' => $exception->getMessage()]);
         }
 
-        return back()->with('success', 'ফি আদায় সম্পন্ন হয়েছে। রসিদ নং: '.$receipt->serial_no);
+        return back()->with('success', __('fees.flash.collected', ['serial' => $receipt->serial_no]));
     }
 }

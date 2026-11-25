@@ -23,6 +23,8 @@ class Guardian extends Model
         'relation',
         'mobile',
         'nid',
+        'nid_front_path',
+        'nid_back_path',
         'email',
         'is_primary',
     ];

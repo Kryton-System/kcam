@@ -36,7 +36,7 @@ class TransportController extends Controller
     {
         $route = TransportRoute::create($request->validated());
 
-        return redirect()->route('transport.routes.show', $route)->with('success', 'রুট যোগ হয়েছে / Route added.');
+        return redirect()->route('transport.routes.show', $route)->with('success', __('transport.flash.route_added'));
     }
 
     public function show(Request $request, TransportRoute $transportRoute): View
@@ -66,7 +66,7 @@ class TransportController extends Controller
     {
         $transportRoute->update($request->validated());
 
-        return redirect()->route('transport.routes.show', $transportRoute)->with('success', 'রুট হালনাগাদ হয়েছে / Route updated.');
+        return redirect()->route('transport.routes.show', $transportRoute)->with('success', __('transport.flash.route_updated'));
     }
 
     public function assign(AssignStudentRequest $request, TransportRoute $transportRoute, AssignStudentToRoute $action): RedirectResponse
@@ -82,7 +82,7 @@ class TransportController extends Controller
             return back()->withInput()->withErrors(['enrollment_id' => $e->getMessage()]);
         }
 
-        return redirect()->route('transport.routes.show', $transportRoute)->with('success', 'শিক্ষার্থী যোগ হয়েছে / Student assigned.');
+        return redirect()->route('transport.routes.show', $transportRoute)->with('success', __('transport.flash.student_assigned'));
     }
 
     public function unassign(TransportAssignment $assignment): RedirectResponse
@@ -90,7 +90,7 @@ class TransportController extends Controller
         $routeId = $assignment->route_id;
         $assignment->delete();
 
-        return redirect()->route('transport.routes.show', $routeId)->with('success', 'শিক্ষার্থী সরানো হয়েছে / Student removed.');
+        return redirect()->route('transport.routes.show', $routeId)->with('success', __('transport.flash.student_removed'));
     }
 
     /**

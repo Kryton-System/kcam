@@ -142,7 +142,7 @@ test('owner creates a route with stops and a vehicle', function (): void {
     $owner = schoolUser(UserRole::Owner);
     $vehicle = CurrentSchool::runAs($owner->school_id, fn () => TransportVehicle::factory()->create(['school_id' => $owner->school_id]));
 
-    $this->actingAs($owner)->get(route('transport.routes.create'))->assertOk()->assertSee('রুট / Route');
+    $this->actingAs($owner)->get(route('transport.routes.create'))->assertOk()->assertSee('রুট');
     $this->actingAs($owner)->post(route('transport.routes.store'), [
         'name' => 'Mirpur Line', 'name_bn' => 'মিরপুর লাইন', 'stops' => "Mirpur 10\nPallabi", 'vehicle_id' => $vehicle->id,
     ])->assertRedirect();

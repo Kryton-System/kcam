@@ -18,7 +18,7 @@
     };
 @endphp
 
-<div {{ $attributes->merge(['class' => 'bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs']) }}>
+<div {{ $attributes->merge(['class' => 'bg-white rounded-lg border border-slate-200/80 p-5 shadow-xs']) }}>
     <div class="flex items-center justify-between">
         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{{ $title }}</p>
         @if ($icon)

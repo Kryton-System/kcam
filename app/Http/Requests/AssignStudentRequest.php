@@ -54,7 +54,7 @@ class AssignStudentRequest extends FormRequest
             }
 
             if (Money::toPoisha((string) $this->input('monthly_fee')) > self::MAX_FEE_POISHA) {
-                $validator->errors()->add('monthly_fee', 'মাসিক ভাড়া ৪ কোটি টাকার বেশি হতে পারবে না / The monthly fee cannot exceed 40,000,000 taka.');
+                $validator->errors()->add('monthly_fee', __('transport.errors.fee_too_high'));
             }
         });
 
@@ -71,7 +71,7 @@ class AssignStudentRequest extends FormRequest
                 ->exists();
 
             if (! $valid) {
-                $validator->errors()->add('enrollment_id', 'সক্রিয় শিক্ষার্থী নির্বাচন করুন / Choose an active student of the current year.');
+                $validator->errors()->add('enrollment_id', __('transport.errors.choose_active_student'));
             }
         });
     }

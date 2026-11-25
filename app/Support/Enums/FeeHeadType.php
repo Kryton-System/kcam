@@ -13,12 +13,8 @@ enum FeeHeadType: string
     case OneTime = 'one_time';
     case Yearly = 'yearly';
 
-    public function labelBn(): string
+    public function label(): string
     {
-        return match ($this) {
-            self::Monthly => 'মাসিক',
-            self::OneTime => 'এককালীন',
-            self::Yearly => 'বার্ষিক',
-        };
+        return __('enums.fee_head_type.'.$this->value);
     }
 }

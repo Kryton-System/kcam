@@ -34,7 +34,7 @@
         x-transition:leave="ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity"
+        class="fixed inset-0 bg-slate-900/50  transition-opacity"
         x-on:click="show = false"
     ></div>
 
@@ -47,7 +47,7 @@
         x-transition:leave="ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        class="relative w-full {{ $maxWidthClass }} bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100 transform transition-all p-6"
+        class="relative w-full {{ $maxWidthClass }} bg-white rounded-lg shadow-sm overflow-hidden border border-slate-100 transform transition-all p-6"
     >
         @if ($title)
             <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">

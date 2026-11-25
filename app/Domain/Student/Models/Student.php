@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Student\Models;
 
+use App\Support\Enums\Religion;
 use App\Support\Enums\StudentStatus;
 use App\Support\Traits\BelongsToSchool;
 use Database\Factories\StudentFactory;
@@ -29,6 +30,7 @@ class Student extends Model
         'birth_reg_no',
         'photo',
         'blood_group',
+        'religion',
         'address',
         'status',
     ];
@@ -37,6 +39,7 @@ class Student extends Model
     {
         return [
             'dob' => 'date',
+            'religion' => Religion::class,
             'status' => StudentStatus::class,
         ];
     }

@@ -20,7 +20,7 @@ class TransportVehicleController extends Controller
     {
         TransportVehicle::create($request->validated());
 
-        return redirect()->route('transport.index')->with('success', 'গাড়ি যোগ হয়েছে / Vehicle added.');
+        return redirect()->route('transport.index')->with('success', __('transport.flash.vehicle_added'));
     }
 
     public function edit(TransportVehicle $vehicle): View
@@ -32,6 +32,6 @@ class TransportVehicleController extends Controller
     {
         $vehicle->update($request->validated());
 
-        return redirect()->route('transport.index')->with('success', 'গাড়ি হালনাগাদ হয়েছে / Vehicle updated.');
+        return redirect()->route('transport.index')->with('success', __('transport.flash.vehicle_updated'));
     }
 }

@@ -15,14 +15,8 @@ enum PaymentStatus: string
     case Refunded = 'refunded';
     case Cancelled = 'cancelled';
 
-    public function labelBn(): string
+    public function label(): string
     {
-        return match ($this) {
-            self::Pending => 'অপেক্ষমান',
-            self::Completed => 'সম্পন্ন',
-            self::Failed => 'ব্যর্থ',
-            self::Refunded => 'ফেরত',
-            self::Cancelled => 'বাতিল',
-        };
+        return __('enums.payment_status.'.$this->value);
     }
 }

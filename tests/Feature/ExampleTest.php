@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
-test('guests visiting the home page are sent to login', function (): void {
-    $this->get('/')->assertRedirect('/login');
+test('guests visiting the home page see the business landing page', function (): void {
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('KCAM')
+        ->assertSee(route('login'));
 });

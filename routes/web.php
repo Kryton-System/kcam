@@ -11,17 +11,30 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\NoticeController;
-use App\Http\Controllers\PortalController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PortalController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\TransportVehicleController;
 use Illuminate\Support\Facades\Route;
 
+// Public home page (authenticated users go to dashboard)
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return view('welcome');
+})->name('home');
+
 // Health check endpoint for uptime monitoring & Gate E
 Route::get('/health', HealthCheckController::class)->name('health');
+
+// Language switch (English / Bangla), available to guests and signed-in users
+Route::get('/language/{locale}', LocaleController::class)->whereIn('locale', ['en', 'bn'])->name('locale.switch');
 
 // PWA Offline fallback
 Route::view('/offline', 'offline')->name('offline');
@@ -39,10 +52,6 @@ Route::middleware('guest')->group(function (): void {
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-    Route::get('/', function () {
-        return redirect()->route('dashboard');
-    });
-
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     // Every route below needs a permission: being logged in is never enough.
@@ -52,6 +61,11 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/', [StudentController::class, 'index'])->middleware('can:view-students')->name('index');
         Route::get('/create', [StudentController::class, 'create'])->middleware('can:create-students')->name('create');
         Route::post('/', [StudentController::class, 'store'])->middleware('can:create-students')->name('store');
+        Route::get('/{student}/photo', [StudentController::class, 'photo'])->middleware('can:view-students')->name('photo');
+        Route::get('/{student}/guardian-nid/{side}', [StudentController::class, 'guardianNid'])
+            ->whereIn('side', ['front', 'back'])
+            ->middleware('can:view-students')
+            ->name('guardian-nid');
         Route::get('/{student}', [StudentController::class, 'show'])->middleware('can:view-students')->name('show');
         Route::get('/{student}/edit', [StudentController::class, 'edit'])->middleware('can:edit-students')->name('edit');
         Route::put('/{student}', [StudentController::class, 'update'])->middleware('can:edit-students')->name('update');

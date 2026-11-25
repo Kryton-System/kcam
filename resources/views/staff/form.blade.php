@@ -3,22 +3,22 @@
 
     $isEdit = $staff->exists;
     $action = $isEdit ? route('staff.update', $staff) : route('staff.store');
-    $heading = $isEdit ? 'কর্মী সম্পাদনা / Edit staff' : 'নতুন কর্মী / Add staff';
+    $heading = $isEdit ? __('staff.form.heading_edit') : __('staff.form.heading_create');
 @endphp
 
 <x-app-layout>
     <x-slot:title>
-        {{ $heading }} | কেসিএএম
+        {{ $heading }} | {{ __('app.name') }}
     </x-slot:title>
 
     <x-slot:header>
         <div>
             <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">{{ $heading }}</h1>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">বেতন টাকায় লিখুন, যেমন 12000.50 / Enter salary in taka, e.g. 12000.50</p>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">{{ __('staff.form.subheading') }}</p>
         </div>
 
         <div>
-            <x-button :href="route('staff.index')" variant="secondary">← তালিকা / List</x-button>
+            <x-button :href="route('staff.index')" variant="secondary">← {{ __('staff.form.list') }}</x-button>
         </div>
     </x-slot:header>
 
@@ -31,20 +31,20 @@
 
             <x-card class="mb-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <x-input name="name" label="নাম (ইংরেজি) / Name (English)" :value="old('name', $staff->name)" required />
-                    <x-input name="name_bn" label="নাম (বাংলা) / Name (Bangla)" :value="old('name_bn', $staff->name_bn)" />
-                    <x-input name="designation" label="পদবি / Designation" :value="old('designation', $staff->designation)" required />
-                    <x-input name="phone" label="মোবাইল / Mobile" type="tel" placeholder="01XXXXXXXXX" :value="old('phone', $staff->phone)" />
-                    <x-input name="joined_on" label="যোগদানের তারিখ / Joining date" type="date" :value="old('joined_on', $staff->joined_on?->format('Y-m-d'))" />
-                    <x-input name="salary" label="মাসিক বেতন (টাকা) / Monthly salary (taka)" inputmode="decimal" :value="old('salary', $isEdit ? Money::toTaka($staff->salary_basic) : '')" required />
-                    <x-select name="status" label="অবস্থা / Status" :selected="old('status', $staff->status)">
-                        <option value="active">সক্রিয় / Active</option>
-                        <option value="inactive">নিষ্ক্রিয় / Inactive</option>
+                    <x-input name="name" :label="__('staff.form.name_en')" :value="old('name', $staff->name)" required />
+                    <x-input name="name_bn" :label="__('staff.form.name_bn')" :value="old('name_bn', $staff->name_bn)" />
+                    <x-input name="designation" :label="__('staff.form.designation')" :value="old('designation', $staff->designation)" required />
+                    <x-input name="phone" :label="__('staff.form.mobile')" type="tel" placeholder="01XXXXXXXXX" :value="old('phone', $staff->phone)" />
+                    <x-input name="joined_on" :label="__('staff.form.joined_on')" type="date" :value="old('joined_on', $staff->joined_on?->format('Y-m-d'))" />
+                    <x-input name="salary" :label="__('staff.form.salary')" inputmode="decimal" :value="old('salary', $isEdit ? Money::toTaka($staff->salary_basic) : '')" required />
+                    <x-select name="status" :label="__('staff.form.status')" :selected="old('status', $staff->status)">
+                        <option value="active">{{ __('staff.form.active') }}</option>
+                        <option value="inactive">{{ __('staff.form.inactive') }}</option>
                     </x-select>
                 </div>
             </x-card>
 
-            <x-button type="submit">সংরক্ষণ করুন / Save</x-button>
+            <x-button type="submit">{{ __('staff.form.save') }}</x-button>
         </form>
     </div>
 </x-app-layout>

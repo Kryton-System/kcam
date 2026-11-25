@@ -1,16 +1,16 @@
 <x-app-layout>
-    <x-slot:title>অভিভাবক পোর্টাল / Parent Portal</x-slot:title>
+    <x-slot:title>{{ __('portal.title') }}</x-slot:title>
 
     <x-slot:header>
         <div>
-            <h1 class="text-xl md:text-2xl font-bold text-slate-900">আমার সন্তান / My Children</h1>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">অভিভাবক পোর্টাল / Parent Portal</p>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900">{{ __('portal.my_children') }}</h1>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">{{ __('portal.title') }}</p>
         </div>
     </x-slot:header>
 
     @if ($children->isEmpty())
         <x-card>
-            <p class="text-sm text-slate-600">কোনো শিশু পাওয়া যায়নি। স্কুলে নিবন্ধিত মোবাইল নম্বর দিয়ে লগইন করুন। / No children found. Log in with the mobile number registered at school.</p>
+            <p class="text-sm text-slate-600">{{ __('portal.index.empty') }}</p>
         </x-card>
     @else
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -21,8 +21,8 @@
                             <h2 class="font-bold text-slate-900">{{ $child->name_bn ?? $child->name }}</h2>
                             <p class="text-xs text-slate-500 mt-0.5">{{ $child->name }} | {{ $child->student_code }}</p>
                             <p class="text-sm text-slate-700 mt-3">
-                                শ্রেণি / Class: {{ $child->currentEnrollment?->schoolClass?->name_bn ?? $child->currentEnrollment?->schoolClass?->name ?? '-' }}
-                                | রোল / Roll: {{ $child->currentEnrollment?->roll_no ?? '-' }}
+                                {{ __('portal.index.class') }}: {{ $child->currentEnrollment?->schoolClass?->name_bn ?? $child->currentEnrollment?->schoolClass?->name ?? '-' }}
+                                | {{ __('portal.index.roll') }}: {{ $child->currentEnrollment?->roll_no ?? '-' }}
                             </p>
                         </div>
                     </x-card>

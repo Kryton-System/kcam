@@ -146,7 +146,7 @@ test('child page shows profile, attendance summary, dues and receipts', function
         ->assertOk()
         ->assertSee($family['student']->student_code)
         ->assertSee('REC-2026-00042')
-        ->assertSee('উপস্থিত / Present')
+        ->assertSee('উপস্থিত')
         ->assertSee('৳');
 });
 

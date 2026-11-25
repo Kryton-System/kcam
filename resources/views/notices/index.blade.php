@@ -4,53 +4,53 @@
 
 <x-app-layout>
     <x-slot:title>
-        বিজ্ঞপ্তি | কেসিএএম
+        {{ __('notices.index.title') }}
     </x-slot:title>
 
     <x-slot:header>
         <div>
-            <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">বিজ্ঞপ্তি</h1>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">অভিভাবক ও শিক্ষকদের জানান</p>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">{{ __('notices.index.heading') }}</h1>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">{{ __('notices.index.subheading') }}</p>
         </div>
     </x-slot:header>
 
     @if ($canSend)
-        <x-card title="নতুন বিজ্ঞপ্তি" class="mb-6">
+        <x-card :title="__('notices.index.new_notice')" class="mb-6">
             <form method="POST" action="{{ route('notices.store') }}" class="space-y-4">
                 @csrf
 
-                <x-input name="title" label="শিরোনাম" :value="old('title')" required />
-                <x-textarea name="body" label="বিস্তারিত" rows="4" required>{{ old('body') }}</x-textarea>
+                <x-input name="title" :label="__('notices.index.notice_title')" :value="old('title')" required />
+                <x-textarea name="body" :label="__('notices.index.body')" rows="4" required>{{ old('body') }}</x-textarea>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <x-select name="audience" label="কাদের জন্য" required :selected="old('audience', 'all')">
-                        <option value="all">সবাই</option>
-                        <option value="class">নির্দিষ্ট শ্রেণি</option>
-                        <option value="parents">অভিভাবক</option>
-                        <option value="teachers">শিক্ষক</option>
+                    <x-select name="audience" :label="__('notices.index.audience')" required :selected="old('audience', 'all')">
+                        <option value="all">{{ __('notices.index.audience_all') }}</option>
+                        <option value="class">{{ __('notices.index.audience_class') }}</option>
+                        <option value="parents">{{ __('notices.index.audience_parents') }}</option>
+                        <option value="teachers">{{ __('notices.index.audience_teachers') }}</option>
                     </x-select>
 
-                    <x-select name="target_class_id" label="শ্রেণি (প্রযোজ্য হলে)" placeholder="নির্বাচন করুন" :selected="old('target_class_id')">
+                    <x-select name="target_class_id" :label="__('notices.index.target_class')" :placeholder="__('notices.index.choose')" :selected="old('target_class_id')">
                         @foreach ($classes as $class)
                             <option value="{{ $class->id }}">{{ $class->name_bn ?? $class->name }}</option>
                         @endforeach
                     </x-select>
 
-                    <x-select name="channel" label="মাধ্যম" required :selected="old('channel', 'app')">
-                        <option value="app">অ্যাপ</option>
-                        <option value="sms">এসএমএস (সর্বোচ্চ ৪৮০ অক্ষর)</option>
-                        <option value="both">উভয়</option>
+                    <x-select name="channel" :label="__('notices.index.channel')" required :selected="old('channel', 'app')">
+                        <option value="app">{{ __('notices.index.channel_app') }}</option>
+                        <option value="sms">{{ __('notices.index.channel_sms') }}</option>
+                        <option value="both">{{ __('notices.index.channel_both') }}</option>
                     </x-select>
                 </div>
 
-                <x-button type="submit" variant="primary">প্রকাশ করুন</x-button>
+                <x-button type="submit" variant="primary">{{ __('notices.index.publish') }}</x-button>
             </form>
         </x-card>
     @endif
 
     <x-card>
         @if ($notices->isEmpty())
-            <x-empty-state title="কোনো বিজ্ঞপ্তি নেই" description="নতুন বিজ্ঞপ্তি প্রকাশ হলে এখানে দেখা যাবে।" />
+            <x-empty-state :title="__('notices.index.empty_title')" :description="__('notices.index.empty_description')" />
         @else
             <div class="divide-y divide-slate-100">
                 @foreach ($notices as $notice)

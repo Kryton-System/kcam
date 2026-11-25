@@ -5,7 +5,7 @@
     'footer' => null,
 ])
 
-<div {{ $attributes->merge(['class' => 'bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden']) }}>
+<div {{ $attributes->merge(['class' => 'bg-white rounded-lg border border-slate-200/80 shadow-xs overflow-hidden']) }}>
     @if ($title || $subtitle || $action)
         <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
             <div>

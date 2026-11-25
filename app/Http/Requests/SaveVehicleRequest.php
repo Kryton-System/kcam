@@ -62,7 +62,7 @@ class SaveVehicleRequest extends FormRequest
             $riders = $vehicle->riderCount();
 
             if ((int) $this->input('capacity') < $riders) {
-                $validator->errors()->add('capacity', "ইতিমধ্যে {$riders} জন শিক্ষার্থী আছে / Capacity cannot be below the {$riders} riders already assigned.");
+                $validator->errors()->add('capacity', __('transport.errors.capacity_below_riders', ['riders' => $riders]));
             }
         });
     }

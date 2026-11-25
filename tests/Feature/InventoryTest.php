@@ -55,8 +55,8 @@ test('list shows bilingual labels and a low stock badge', function (): void {
 
     $response = $this->actingAs($owner)->get(route('inventory.index'));
 
-    $response->assertOk()->assertSee('Chalk')->assertSee('Paper')->assertSee('ইনভেন্টরি / Inventory');
-    expect(substr_count($response->getContent(), 'কম স্টক / Low stock'))->toBe(1);
+    $response->assertOk()->assertSee('Chalk')->assertSee('Paper')->assertSee('ইনভেন্টরি');
+    expect(substr_count($response->getContent(), 'কম স্টক'))->toBe(1);
 });
 
 test('owner creates an item with Bangla digits normalised', function (): void {
@@ -200,7 +200,7 @@ test('detail page shows the ledger and stock', function (): void {
     $item = stockItem($owner->school_id, 7, ['name' => 'Crayons']);
 
     $this->actingAs($owner)->get(route('inventory.show', $item))
-        ->assertOk()->assertSee('Crayons')->assertSee('Purchase')->assertSee('স্টক খাতা / Stock ledger');
+        ->assertOk()->assertSee('Crayons')->assertSee('Purchase')->assertSee('স্টক খাতা');
 });
 
 test('another school gets 404 on item pages and movements', function (): void {

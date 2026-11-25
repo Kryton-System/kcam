@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="bn" class="h-full bg-slate-50">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('app.name', 'KCAM') }} | কিন্ডারগার্টেন ক্লাউড একাডেমিক ম্যানেজমেন্ট</title>
+    <title>{{ $title ?? config('app.name', 'KCAM') }} | {{ __('app.tagline') }}</title>
 
     <!-- PWA & Mobile Icons -->
     <link rel="manifest" href="/manifest.json">
@@ -16,6 +16,10 @@
 
     
 
+    <!-- Fonts: Inter for English, Hind Siliguri for Bangla -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
     <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -28,18 +32,22 @@
             <!-- Brand & School Info -->
             <div class="px-5 flex items-center justify-between pb-5 border-b border-slate-100">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-lg shadow-xs">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-lg shadow-xs">
                         K
                     </div>
                     <div>
                         <h2 class="text-sm font-bold text-slate-900 leading-tight">
-                            {{ auth()->user()?->school?->name_bn ?? auth()->user()?->school?->name ?? 'কেসিএএম' }}
+                            {{ auth()->user()?->school?->name_bn ?? auth()->user()?->school?->name ?? __('app.name') }}
                         </h2>
                         <span class="inline-block text-[11px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium mt-0.5">
-                            {{ auth()->user()?->role?->labelBn() ?? 'ব্যবহারকারী' }}
+                            {{ auth()->user()?->role?->label() ?? __('app.user_fallback') }}
                         </span>
                     </div>
                 </div>
+            </div>
+
+            <div class="px-5 pt-4">
+                <x-language-switcher />
             </div>
 
             <!-- Navigation Links -->
@@ -54,7 +62,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
                     </x-slot:icon>
-                    ড্যাশবোর্ড
+                    {{ __('app.nav.dashboard') }}
                 </x-nav-link>
 
                 @if ($role === 'parent' && config('kcam.modules.portal'))
@@ -64,7 +72,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
                         </x-slot:icon>
-                        আমার সন্তান / My Children
+                        {{ __('app.nav.children') }}
                     </x-nav-link>
                 @endif
 
@@ -76,7 +84,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                             </svg>
                         </x-slot:icon>
-                        হাজিরা
+                        {{ __('app.nav.attendance') }}
                     </x-nav-link>
                     @endif
 
@@ -87,7 +95,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
                         </x-slot:icon>
-                        শিক্ষার্থী তালিকা
+                        {{ __('app.nav.students') }}
                     </x-nav-link>
                     @endif
                 @endif
@@ -100,7 +108,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                         </x-slot:icon>
-                        ফি ও আদায়
+                        {{ __('app.nav.fees') }}
                     </x-nav-link>
                     @endif
                 @endif
@@ -113,7 +121,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                         </x-slot:icon>
-                        পরীক্ষা ও ফলাফল
+                        {{ __('app.nav.exams') }}
                     </x-nav-link>
                     @endif
                 @endif
@@ -125,7 +133,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                     </x-slot:icon>
-                    হিসাব
+                    {{ __('app.nav.accounts') }}
                 </x-nav-link>
                 @endif
                 @if ($role === 'owner' || $role === 'accountant')
@@ -136,7 +144,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
                         </x-slot:icon>
-                        ইনভেন্টরি / Inventory
+                        {{ __('app.nav.inventory') }}
                     </x-nav-link>
                     @endif
                 @endif
@@ -147,7 +155,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                     </x-slot:icon>
-                    কর্মী / Staff
+                    {{ __('app.nav.staff') }}
                 </x-nav-link>
                 <x-nav-link :href="route('payroll.index')" :active="request()->routeIs('payroll.*')">
                     <x-slot:icon>
@@ -155,7 +163,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </x-slot:icon>
-                    বেতন / Payroll
+                    {{ __('app.nav.payroll') }}
                 </x-nav-link>
                 @endif
 
@@ -166,7 +174,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                         </svg>
                     </x-slot:icon>
-                    বিজ্ঞপ্তি ও এসএমএস
+                    {{ __('app.nav.notices') }}
                 </x-nav-link>
                 @endif
 
@@ -177,7 +185,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0zM3 13V6a1 1 0 011-1h11a1 1 0 011 1v7M16 8h3l2 3v4h-2M3 13h13" />
                         </svg>
                     </x-slot:icon>
-                    পরিবহন / Transport
+                    {{ __('app.nav.transport') }}
                 </x-nav-link>
                 @endif
             </nav>
@@ -185,7 +193,7 @@
             <!-- User Footer -->
             <div class="p-4 border-t border-slate-100 flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 text-xs font-bold">
+                    <div class="w-8 h-8 rounded-lg bg-slate-200 flex items-center justify-center text-slate-700 text-xs font-bold">
                         {{ mb_substr(auth()->user()?->name ?? 'U', 0, 1) }}
                     </div>
                     <div class="truncate text-xs">
@@ -196,7 +204,7 @@
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg" title="লগআউট">
+                    <button type="submit" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg" title="{{ __('app.logout') }}">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
@@ -214,14 +222,16 @@
             </div>
             <div>
                 <h1 class="text-sm font-bold text-slate-900 leading-tight">
-                    {{ auth()->user()?->school?->name_bn ?? auth()->user()?->school?->name ?? 'কেসিএএম' }}
+                    {{ auth()->user()?->school?->name_bn ?? auth()->user()?->school?->name ?? __('app.name') }}
                 </h1>
                 <span class="text-[10px] text-slate-500 font-medium">
-                    {{ auth()->user()?->role?->labelBn() ?? '' }}
+                    {{ auth()->user()?->role?->label() ?? '' }}
                 </span>
             </div>
         </div>
 
+        <div class="flex items-center gap-2">
+            <x-language-switcher />
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="p-2 text-slate-500 hover:text-slate-800 touch-target flex items-center justify-center">
@@ -230,6 +240,7 @@
                 </svg>
             </button>
         </form>
+        </div>
     </header>
 
     <!-- Main Content Area -->
@@ -251,7 +262,7 @@
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
-            <span class="text-[11px] mt-1">হোম</span>
+            <span class="text-[11px] mt-1">{{ __('app.short.home') }}</span>
         </a>
 
         @if ($role === 'parent' && config('kcam.modules.portal'))
@@ -259,7 +270,7 @@
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
-                <span class="text-[11px] mt-1">সন্তান</span>
+                <span class="text-[11px] mt-1">{{ __('app.short.children') }}</span>
             </a>
         @endif
 
@@ -269,7 +280,7 @@
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
-                <span class="text-[11px] mt-1">হাজিরা</span>
+                <span class="text-[11px] mt-1">{{ __('app.short.attendance') }}</span>
             </a>
             @endif
 
@@ -278,7 +289,7 @@
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
-                <span class="text-[11px] mt-1">শিক্ষার্থী</span>
+                <span class="text-[11px] mt-1">{{ __('app.short.students') }}</span>
             </a>
             @endif
         @endif
@@ -289,7 +300,7 @@
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <span class="text-[11px] mt-1">ফি</span>
+                <span class="text-[11px] mt-1">{{ __('app.short.fees') }}</span>
             </a>
             @endif
         @endif
@@ -299,7 +310,7 @@
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
-            <span class="text-[11px] mt-1">হিসাব</span>
+            <span class="text-[11px] mt-1">{{ __('app.short.accounts') }}</span>
         </a>
         @endif
         @if ($role === 'owner' || $role === 'accountant')
@@ -308,7 +319,7 @@
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
-                <span class="text-[11px] mt-1">স্টক</span>
+                <span class="text-[11px] mt-1">{{ __('app.short.stock') }}</span>
             </a>
             @endif
         @endif
@@ -317,7 +328,7 @@
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="text-[11px] mt-1">বেতন</span>
+            <span class="text-[11px] mt-1">{{ __('app.short.payroll') }}</span>
         </a>
         @endif
 
@@ -326,7 +337,7 @@
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
-            <span class="text-[11px] mt-1">বিজ্ঞপ্তি</span>
+            <span class="text-[11px] mt-1">{{ __('app.short.notices') }}</span>
         </a>
         @endif
 
@@ -335,7 +346,7 @@
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0zM3 13V6a1 1 0 011-1h11a1 1 0 011 1v7M16 8h3l2 3v4h-2M3 13h13" />
             </svg>
-            <span class="text-[11px] mt-1">পরিবহন</span>
+            <span class="text-[11px] mt-1">{{ __('app.short.transport') }}</span>
         </a>
         @endif
     </nav>

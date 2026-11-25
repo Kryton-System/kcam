@@ -49,6 +49,7 @@ class PortalController extends Controller
                 ->with('payment')->latest()->limit(10)->get(),
             'results' => $this->publishedResults($enrollment?->id),
             'notices' => $this->noticesFor($enrollment?->class_id),
+            'siblings' => $this->linkedChildren($request->user())->orderBy('name')->get(),
         ]);
     }
 

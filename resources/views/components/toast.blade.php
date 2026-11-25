@@ -29,7 +29,7 @@
             x-transition:leave="ease-in duration-200"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 translate-y-2 scale-95"
-            class="pointer-events-auto rounded-xl p-4 shadow-lg border text-sm flex items-start gap-3"
+            class="pointer-events-auto rounded-lg p-4 shadow-sm border text-sm flex items-start gap-3"
             :class="{
                 'bg-emerald-50 border-emerald-200 text-emerald-900': item.type === 'success',
                 'bg-red-50 border-red-200 text-red-900': item.type === 'error',

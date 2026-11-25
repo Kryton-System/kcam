@@ -16,15 +16,8 @@ enum PaymentMethod: string
     case Card = 'card';
     case BankTransfer = 'bank_transfer';
 
-    public function labelBn(): string
+    public function label(): string
     {
-        return match ($this) {
-            self::Cash => 'নগদ',
-            self::Bkash => 'বিকাশ',
-            self::Nagad => 'নগদ (মোবাইল)',
-            self::Rocket => 'রকেট',
-            self::Card => 'কার্ড',
-            self::BankTransfer => 'ব্যাংক ট্রান্সফার',
-        };
+        return __('enums.payment_method.'.$this->value);
     }
 }

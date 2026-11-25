@@ -14,13 +14,8 @@ enum AttendanceStatus: string
     case Late = 'late';
     case Excused = 'excused';
 
-    public function labelBn(): string
+    public function label(): string
     {
-        return match ($this) {
-            self::Present => 'উপস্থিত',
-            self::Absent => 'অনুপস্থিত',
-            self::Late => 'বিলম্বিত',
-            self::Excused => 'ছুটি',
-        };
+        return __('enums.attendance_status.'.$this->value);
     }
 }

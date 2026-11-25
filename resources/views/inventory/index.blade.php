@@ -1,34 +1,34 @@
 <x-app-layout>
     <x-slot:title>
-        ইনভেন্টরি / Inventory
+        {{ __('inventory.title') }}
     </x-slot:title>
 
     <x-slot:header>
         <div>
-            <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">ইনভেন্টরি / Inventory</h1>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">স্কুলের মালামালের স্টক / School supplies stock</p>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">{{ __('inventory.title') }}</h1>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">{{ __('inventory.index.subtitle') }}</p>
         </div>
     </x-slot:header>
 
-    <x-card title="নতুন আইটেম / New item" class="mb-6">
+    <x-card :title="__('inventory.index.new_item')" class="mb-6">
         <form method="POST" action="{{ route('inventory.store') }}" class="space-y-4">
             @csrf
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <x-input name="name" label="নাম / Name" :value="old('name')" required />
-                <x-input name="unit" label="একক / Unit" :value="old('unit')" placeholder="pcs, kg, box" required />
-                <x-input name="low_stock_threshold" label="সতর্কতার সীমা / Low stock level" type="text" inputmode="numeric" :value="old('low_stock_threshold', 0)" required />
+                <x-input name="name" :label="__('inventory.index.name')" :value="old('name')" required />
+                <x-input name="unit" :label="__('inventory.index.unit')" :value="old('unit')" :placeholder="__('inventory.index.unit_placeholder')" required />
+                <x-input name="low_stock_threshold" :label="__('inventory.index.low_stock_level')" type="text" inputmode="numeric" :value="old('low_stock_threshold', 0)" required />
             </div>
 
-            <x-button type="submit" variant="primary">যোগ করুন / Add</x-button>
+            <x-button type="submit" variant="primary">{{ __('inventory.index.add') }}</x-button>
         </form>
     </x-card>
 
     <x-card>
         @if ($items->isEmpty())
-            <x-empty-state title="কোনো আইটেম নেই / No items yet" description="প্রথম আইটেম যোগ করুন / Add your first item above." />
+            <x-empty-state :title="__('inventory.index.empty_title')" :description="__('inventory.index.empty_description')" />
         @else
-            <x-table :headers="['নাম / Name', 'একক / Unit', 'স্টক / Stock', 'অবস্থা / Status', '']">
+            <x-table :headers="[__('inventory.index.name'), __('inventory.index.unit'), __('inventory.index.col_stock'), __('inventory.index.col_status'), '']">
                 @foreach ($items as $item)
                     @php
                         $stock = (int) $item->stock;
@@ -39,13 +39,13 @@
                         <td class="px-4 py-3 font-semibold text-slate-900">{{ $stock }}</td>
                         <td class="px-4 py-3">
                             @if ($item->isLowStock($stock))
-                                <x-badge variant="danger" data-low-stock>কম স্টক / Low stock</x-badge>
+                                <x-badge variant="danger" data-low-stock>{{ __('inventory.index.low_stock') }}</x-badge>
                             @else
-                                <x-badge variant="success">পর্যাপ্ত / OK</x-badge>
+                                <x-badge variant="success">{{ __('inventory.index.ok') }}</x-badge>
                             @endif
                         </td>
                         <td class="px-4 py-3">
-                            <a href="{{ route('inventory.show', $item) }}" class="text-emerald-700 font-medium hover:underline">খাতা / Ledger</a>
+                            <a href="{{ route('inventory.show', $item) }}" class="text-emerald-700 font-medium hover:underline">{{ __('inventory.index.ledger') }}</a>
                         </td>
                     </tr>
                 @endforeach

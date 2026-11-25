@@ -79,6 +79,6 @@ class ExamController extends Controller
         });
 
         return redirect()->route('exams.marks.edit', [$exam, 'subject_id' => $subject->id])
-            ->with('success', 'নম্বর সংরক্ষিত হয়েছে। / Marks saved.');
+            ->with('success', __('exams.flash.marks_saved'));
     }
 }

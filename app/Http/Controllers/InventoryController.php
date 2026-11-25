@@ -39,7 +39,7 @@ class InventoryController extends Controller
 
         activity()->causedBy($request->user())->performedOn($item)->log('inventory_item_created');
 
-        return redirect()->route('inventory.index')->with('success', 'আইটেম যোগ হয়েছে। / Item added.');
+        return redirect()->route('inventory.index')->with('success', __('inventory.flash.item_added'));
     }
 
     public function show(InventoryItem $item): View
@@ -70,10 +70,10 @@ class InventoryController extends Controller
             );
         } catch (InsufficientStockException $e) {
             throw ValidationException::withMessages([
-                'quantity' => 'স্টকের চেয়ে বেশি বের করা যাবে না। / Not enough stock: '.$e->getMessage(),
+                'quantity' => __('inventory.flash.insufficient_stock', ['detail' => $e->getMessage()]),
             ]);
         }
 
-        return redirect()->route('inventory.show', $item)->with('success', 'স্টক খাতায় লেখা হয়েছে। / Movement recorded.');
+        return redirect()->route('inventory.show', $item)->with('success', __('inventory.flash.movement_recorded'));
     }
 }

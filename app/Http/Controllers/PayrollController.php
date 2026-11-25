@@ -37,7 +37,7 @@ class PayrollController extends Controller
         $created = $action->execute((int) $request->user()->school_id, $month);
 
         return redirect()->route('payroll.index', ['month' => $month])
-            ->with('success', "বেতন স্লিপ তৈরি হয়েছে: {$created}টি। / Payslips created: {$created}.");
+            ->with('success', __('payroll.flash.generated', ['count' => $created]));
     }
 
     public function show(Payslip $payslip): View
@@ -59,7 +59,7 @@ class PayrollController extends Controller
 
         return redirect()->route('payroll.index', ['month' => $payslip->month])->with(
             $updated === 1 ? 'success' : 'error',
-            $updated === 1 ? 'বেতন স্লিপ হালনাগাদ হয়েছে। / Payslip updated.' : 'পরিশোধিত স্লিপ বদলানো যায় না। / A paid payslip cannot be changed.',
+            $updated === 1 ? __('payroll.flash.updated') : __('payroll.flash.paid_locked'),
         );
     }
 
@@ -73,7 +73,7 @@ class PayrollController extends Controller
 
         return redirect()->route('payroll.index', ['month' => $payslip->month])->with(
             $updated === 1 ? 'success' : 'error',
-            $updated === 1 ? 'বেতন পরিশোধ হিসেবে চিহ্নিত হয়েছে। / Marked as paid.' : 'এই স্লিপ আগেই পরিশোধ হয়েছে। / Already paid.',
+            $updated === 1 ? __('payroll.flash.marked_paid') : __('payroll.flash.already_paid'),
         );
     }
 }

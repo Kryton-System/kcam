@@ -27,13 +27,13 @@ class AssignStudentToRoute
             $locked = TransportRoute::query()->whereKey($route->id)->lockForUpdate()->with('vehicle')->firstOrFail();
 
             if ($locked->vehicle === null) {
-                throw new TransportException('এই রুটে কোনো গাড়ি নেই / This route has no vehicle yet.');
+                throw new TransportException(__('transport.errors.no_vehicle'));
             }
 
             $vehicle = TransportVehicle::query()->whereKey($locked->vehicle->id)->lockForUpdate()->firstOrFail();
 
             if ($vehicle->riderCount() >= $vehicle->capacity) {
-                throw new TransportException('গাড়ির আসন পূর্ণ / The vehicle is full.');
+                throw new TransportException(__('transport.errors.vehicle_full'));
             }
 
             try {
@@ -43,7 +43,7 @@ class AssignStudentToRoute
                     'monthly_fee' => $monthlyFeePoisha,
                 ]);
             } catch (UniqueConstraintViolationException) {
-                throw new TransportException('শিক্ষার্থী আগে থেকেই একটি রুটে আছে / This student already rides a route.');
+                throw new TransportException(__('transport.errors.already_assigned'));
             }
         });
     }

@@ -35,7 +35,7 @@ describe('staff authorization', function (): void {
         $owner = schoolUser(UserRole::Owner, $school);
         $staff = makeStaff($school);
 
-        $this->actingAs($owner)->get('/staff')->assertOk()->assertSee('কর্মী / Staff');
+        $this->actingAs($owner)->get('/staff')->assertOk()->assertSee('কর্মী');
         $this->actingAs($owner)->get('/staff/create')->assertOk();
         $this->actingAs($owner)->get("/staff/{$staff->id}/edit")->assertOk();
     });

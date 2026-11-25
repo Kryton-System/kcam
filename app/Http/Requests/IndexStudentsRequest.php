@@ -30,6 +30,8 @@ class IndexStudentsRequest extends FormRequest
         return [
             'search' => ['nullable', 'string', 'max:100'],
             'class_id' => ['nullable', 'integer', Rule::exists('classes', 'id')->where('school_id', $this->user()->school_id)],
+            'status' => ['nullable', Rule::in(['active', 'inactive'])],
+            'sort' => ['nullable', Rule::in(['name', 'code', 'newest'])],
         ];
     }
 }

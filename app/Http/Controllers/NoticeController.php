@@ -48,6 +48,6 @@ class NoticeController extends Controller
             ->withProperties(['audience' => $validated['audience'], 'channel' => $validated['channel']])
             ->log('notice_published');
 
-        return back()->with('success', 'বিজ্ঞপ্তি সফলভাবে প্রকাশিত হয়েছে।');
+        return back()->with('success', __('notices.flash.published'));
     }
 }
