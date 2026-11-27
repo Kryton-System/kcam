@@ -1,0 +1,12 @@
+.git
+.claude
+.codegraph
+.env
+.env.*
+node_modules
+tests
+docs
+storage/logs
+storage/framework/views
+database/*.sqlite*
+public/hot

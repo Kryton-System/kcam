@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Vercel terminates HTTPS in front of the app; trust its forwarded headers.
+        $middleware->trustProxies(at: '*');
         $middleware->alias(['module' => EnsureModuleEnabled::class]);
         $middleware->web(append: [
             SecurityHeaders::class,

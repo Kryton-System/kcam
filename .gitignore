@@ -27,3 +27,4 @@ Homestead.yaml
 Thumbs.db
 /.codegraph
 /database/*.sqlite*
+.vercel
